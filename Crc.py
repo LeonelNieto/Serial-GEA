@@ -13,4 +13,4 @@ def crc16_ccitt(data_hex):
     return hex(crc)
 
 
-print(crc16_ccitt("C00BE4A000F039"))
+#print(crc16_ccitt("C00BE4A000F01B"))
