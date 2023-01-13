@@ -30,6 +30,3 @@ ser.write(packet)
 print((ser.read(14)).hex())
     # print(ser.read())
 
-
-def data(src, dst, ERD):
-    data = input()
