@@ -1,6 +1,6 @@
 import Crc
 
-def ErdRead(strERD):
+def ReadErd(strERD):
     bitInit = "E2"
     dst = "C0"
     src = "E4"
@@ -18,9 +18,9 @@ def ErdRead(strERD):
 
     return data
 
-print(ErdRead("F039"))
+# print(ReadErd("F039"))
 
-# InputERDLectura("F039")
+
 
 ################################### TRAMA DE DATOS ###############################################
 

@@ -11,11 +11,10 @@ ser.dsrdtr = False
 print("connected to: " + ser.portstr)
 ser.open()
 
-packet = Frame.ErdRead("F039")
-print(packet)
+packet = Frame.ReadErd("209F")
 
 ser.write(packet)
-print((ser.read(14)).hex())
+print((ser.read(45)).hex())
 
     # print(ser.read())
 
