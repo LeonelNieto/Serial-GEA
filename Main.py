@@ -9,12 +9,13 @@ ser.xonxoff = False
 ser.rtscts = False  
 ser.dsrdtr = False  
 print("connected to: " + ser.portstr)
+
+ERD = str(input("Ingresa el ERD a leer: "))
+
 ser.open()
-
-packet = Frame.ReadErd("209F")
-
+packet = Frame.ReadErd(ERD)
 ser.write(packet)
-print((ser.read(45)).hex())
+print((ser.read(14)).hex())
 
     # print(ser.read())
 
