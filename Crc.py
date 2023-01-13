@@ -11,9 +11,7 @@ def crc16_ccitt(data_hex):
                 crc ^= poly
     crc &= 0xffff
     crcStr = str(hex(crc))
-    # crcLower = crcStr[2:4]
-    # crcHigher = crcStr[4:6]
-    # CrcCalculated = crcLower + " " + crcHigher
+
     return crcStr
 
 
@@ -22,7 +20,3 @@ def crc16_ccitt(data_hex):
 
 ### dst ### length ### src ###    cmd    ###   ERD    ###  
 #    C0       XX        E4       XX XX        XX XX             
-
-
-
-# print(crc16_ccitt("C00BE4A000F039"))

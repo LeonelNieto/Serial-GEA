@@ -1,3 +1,17 @@
+"""
+The goal of this proyect is make a serial communication usign GEA3 protocol with a TTL-USB serial.
+
+@author: Leonel Nieto Lara
+@company: Mabe TyP
+@Date: 13/01/2022
+
+source:
+* https://geappliances.atlassian.net/wiki/spaces/SDAED/pages/3298000900/GEA3+Communication?preview=/3298000900/3297935398/image2022-8-19_16-35-51.png
+* https://github.com/geappliances/applcommon.next-gen-specs/blob/master/erd-api.md#public
+* https://github.com/geappliances/documentation.gea-communication/blob/master/MessageFormat.md
+* http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
+
+"""
 import serial
 import Frame
 
@@ -25,5 +39,3 @@ while (1):
         break
 
 
-#e4 c0 00 f0 01 38 e3
-#e2 e4 0e c0 a1 00 00 f0 39 01 01

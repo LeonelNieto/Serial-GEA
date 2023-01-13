@@ -18,9 +18,6 @@ def ReadErd(strERD):
 
     return data
 
-# print(ReadErd("F039"))
-
-
 
 ################################### TRAMA DE DATOS ###############################################
 
