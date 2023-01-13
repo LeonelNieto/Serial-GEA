@@ -12,16 +12,11 @@ source:
 * http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
 
 """
-import serial
+import config_serial
 import Frame
 
-ser = serial.Serial(baudrate=230400, bytesize=serial.EIGHTBITS,
-                    parity=serial.PARITY_NONE)  
-ser.port = "COM9"
-ser.stopbits = serial.STOPBITS_ONE 
-ser.xonxoff = False 
-ser.rtscts = False  
-ser.dsrdtr = False  
+ser = config_serial.ConfiguracionSerial("COM9")
+
 print("connected to: " + ser.portstr)
 
 ERD = str(input("Ingresa el ERD a leer: "))
@@ -37,5 +32,3 @@ while (1):
         print(reading)
     else:
         break
-
-
