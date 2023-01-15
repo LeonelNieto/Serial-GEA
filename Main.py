@@ -14,11 +14,9 @@ source:
 import config_serial
 import Frame
 
-ser = config_serial.ConfiguracionSerial("COM3")
-print("connected to: " + ser.portstr)
-
 ERD = str(input("Ingresa el ERD a leer: "))
-ser.open()
+
+ser = config_serial.ConfiguracionSerial()
 packet = Frame.ReadErd(ERD)
 ser.write(packet)
 CompleteFrame = ""
