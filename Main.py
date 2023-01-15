@@ -10,23 +10,25 @@ source:
 * https://github.com/geappliances/applcommon.next-gen-specs/blob/master/erd-api.md#public
 * https://github.com/geappliances/documentation.gea-communication/blob/master/MessageFormat.md
 * http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
-
 """
 import config_serial
 import Frame
 
-ser = config_serial.ConfiguracionSerial("COM9")
+ser = config_serial.ConfiguracionSerial("COM3")
 print("connected to: " + ser.portstr)
 
 ERD = str(input("Ingresa el ERD a leer: "))
 ser.open()
 packet = Frame.ReadErd(ERD)
 ser.write(packet)
+CompleteFrame = ""
 
 while (1):
     reading = (ser.read()).hex()
-
-    if reading != "e3":
-        print(reading)
-    else:
+    CompleteFrame += reading
+    if reading == "e3":
         break
+
+print(CompleteFrame)
+
+
