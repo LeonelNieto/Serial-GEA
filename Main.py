@@ -15,10 +15,22 @@ import config_serial
 import Frame
 
 ERD = str(input("Ingresa el ERD a leer: "))
+ReadOrWrite = int(input("Selecciona que quieres hacer: \n 1) Lectura \n 2) Escritura \n : "))
+
+if ReadOrWrite == 1:
+    packetRead = Frame.ReadErd(ERD)
+elif ReadOrWrite == 2:
+    dato = str(input("Ingresa el dato a escribir: "))
+    packetWrite = Frame.WriteErd(ERD, dato)
+else:
+    print("Opción incorrecta, selecciona una opción correcta")
 
 ser = config_serial.ConfiguracionSerial()
-packet = Frame.ReadErd(ERD)
-ser.write(packet)
+if ReadOrWrite == 1:
+    ser.write(packetRead)
+else:
+    ser.write(packetWrite) 
+
 CompleteFrame = ""
 
 while (1):
@@ -30,3 +42,8 @@ while (1):
 print(CompleteFrame)
 
 
+#E2 C0 0D E4 A2 00 F0 39 01 02 BD 0D E3
+
+#E2 C0 0d E4 A2 00 f0 39 01 02 bd 0d E3
+
+#E2 E4 0C C0 A3 00 00 F0 39 08 21 E3

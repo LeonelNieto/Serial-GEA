@@ -3,8 +3,8 @@ import serial.tools.list_ports
 
 def ConfiguracionSerial():
     ports = list(serial.tools.list_ports.comports())
-    for port in ports:
-        print(port.device)
+    # for port in ports:
+    #     print(port.device)
     ser = serial.Serial(ports[0].device)
     ser.baudrate = 230400
     ser.bytesize = serial.EIGHTBITS
