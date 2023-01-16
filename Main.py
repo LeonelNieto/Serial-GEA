@@ -47,3 +47,9 @@ print(CompleteFrame)
 #E2 C0 0d E4 A2 00 f0 39 01 02 bd 0d E3
 
 #E2 E4 0C C0 A3 00 00 F0 39 08 21 E3
+
+#E2 C0 0D E4 A2 00 00 32 01 01 E0 E2 D2 E3
+
+#E2 C0 0d E4 A2 00 00 32 01 01 e2 d2 E3
+
+#E2 C0 0d E4 A2 00 f0 39 01 02 bd 0d E3
