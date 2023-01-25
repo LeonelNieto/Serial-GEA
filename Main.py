@@ -1,47 +1,60 @@
-"""
-The goal of this proyect is make a serial communication usign GEA3 protocol with a TTL-USB serial.
-
-@author: Leonel Nieto Lara
-@company: Mabe TyP
-@Date: 13/01/2022
-
-source:
-* https://geappliances.atlassian.net/wiki/spaces/SDAED/pages/3298000900/GEA3+Communication?preview=/3298000900/3297935398/image2022-8-19_16-35-51.png
-* https://github.com/geappliances/applcommon.next-gen-specs/blob/master/erd-api.md#public
-* https://github.com/geappliances/documentation.gea-communication/blob/master/MessageFormat.md
-* http://www.sunshine2k.de/coding/javascript/crc/crc_js.html
-"""
 import config_serial
-import Frame
+import ReadorWrite
+import verifylength as vrlen
 
-# ERD = str(input("Ingresa el ERD a leer: "))
-# ReadOrWrite = int(input("Selecciona que quieres hacer: \n 1) Lectura \n 2) Escritura \n Opción: "))
+def SerialSettings(board):
+    ser = config_serial.ConfiguracionSerial(board)
+    return ser
 
-def prueba(ERD, ReadOrWrite, dato):
-    ReadOrWrite = int(ReadOrWrite)
-    ERD = str(ERD)
-    if ReadOrWrite == 1:
-        packetRead = Frame.ReadErd(ERD)
-    elif ReadOrWrite == 2:
-        dato = str(dato)
-        packetWrite = Frame.WriteErd(ERD, dato)
-    else:
-        print("Opción incorrecta, selecciona una opción correcta")
-
-    ser = config_serial.ConfiguracionSerial()
-    if ReadOrWrite == 1:
-        ser.write(packetRead)
-    else:
-        ser.write(packetWrite) 
-
+def ReadButton(dst, ERD, board):                                                                                               # Se ejecuta cuando se presiona el botón Read
+    CompleteFrame = ""                                                                                          # Limpia la trama
+    dst = str(dst)                                                                                        # Obtiene los datos del entry Dst
+    ERD = str(ERD)                                                                                        # Obtiene los datos del entry ERD
+    longitudERD = vrlen.longitudERD(ERD)
+    board = int(board) 
+    if longitudERD == "Fallo":
+        CompleteFrame = "Error" 
+    else:                                                                                                           # Función que convierte str -> bytearray
+        lectura = ReadorWrite.ReadErd(longitudERD, dst) 
+        ser = SerialSettings(board)                                                                   # Función para abrir puerto con la configuración serial
+        ser.write(lectura)                                                                                          # Escribe al puerto serial
+        reading = (ser.read()).hex()                                                                                # Lee el primer byte de datos convertido a hexadecimal
+        if reading != "e2":                                                                                         # Si el primer byte es el byte de inicio
+            CompleteFrame = "Error"
+        else:                                                                                                       # Si no detecta el bit de inicio muestra mensaje de error
+            while (1):
+                reading = (ser.read()).hex()                                                                        # Se lee byte por byte
+                CompleteFrame += reading                                                                            # Concatenación de bytes
+                if reading == "":                                                                                   # Si no lee nada sale del ciclo
+                    break
+                elif reading == "e3":                                                                               # Si detecta el byte de paro sale del ciclo
+                    break 
+    return CompleteFrame
+        
+def WriteButton(dst, ERD, dato, board):
     CompleteFrame = ""
-    while (1):
+    dst = str(dst)
+    ERD = str(ERD)
+    dato = str(dato)
+    dato = dato.replace(" ", "")
+    longitudERD = vrlen.longitudERD(ERD)
+    if longitudERD == "Fallo":
+        CompleteFrame = "Error"
+    else:
+        escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)
+        ser = SerialSettings(board)
+        ser.write(escritura)
         reading = (ser.read()).hex()
-        CompleteFrame += reading
-        if reading == "e3":
-            break
-    
+        if reading == "e2":
+            while (1):
+                reading = (ser.read()).hex()
+                CompleteFrame += reading
+                if reading == "":
+                    break
+                elif reading == "e3":
+                    break
+        else:
+            CompleteFrame = "Error"
+        
     return CompleteFrame
 
-# print(prueba("F039", 1))
-    # print(CompleteFrame)

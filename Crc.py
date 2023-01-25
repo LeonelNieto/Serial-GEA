@@ -10,8 +10,13 @@ def crc16_ccitt(data_hex):
             if c15 ^ bit:
                 crc ^= poly
     crc &= 0xffff
-    crcStr = str(hex(crc))
-
+    crcStr = "0x{:02x}".format(crc)
+    longitudCrc = len(crcStr)
+    if longitudCrc == 5:
+        crcStr = crcStr[0:2] + "0" + crcStr[2: ]
+    elif longitudCrc == 4:
+        crcStr = crcStr[0:2] + "00" + crcStr[2: ]
+    
     return crcStr
 
 

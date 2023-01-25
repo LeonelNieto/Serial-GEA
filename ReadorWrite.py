@@ -1,8 +1,8 @@
 import Crc
 
-def ReadErd(strERD):
+def ReadErd(strERD, strDst):
     bitInit = "E2"
-    dst = "C0"
+    dst = str(strDst)
     src = "E4"
     cmd = "A000"
     ERD = str(strERD)
@@ -14,15 +14,19 @@ def ReadErd(strERD):
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)
     crc = crc[2: ]
     frame = bitInit + FrameToCalculateCrc + crc + bitStop
-    data = bytearray.fromhex(frame)
-    return data
+    data = bytes.fromhex(frame)
 
-def WriteErd(strERD, dato):
+    return data
+    
+
+def WriteErd(strERD, dato, strdst):
     bitInit = "E2"
-    dst = "C0"
+    dst = str(strdst)
     src = "E4"
     cmd = "A200"
-    count = "01"
+    count = int((len(dato)) / 2)
+    count = "0x{:02x}".format(count)
+    count = count[2: ]
     ESC = "E0"
     ERD = str(strERD)
     dato = str(dato)
@@ -37,8 +41,8 @@ def WriteErd(strERD, dato):
         frame = bitInit + FrameToCalculateCrc + crc + bitStop
     else:
         frame = bitInit + FrameToCalculateCrc + ESC + crc + bitStop
-    print(frame)
     dataWrite = bytearray.fromhex(frame)
+    
     return dataWrite
 
 ################################### TRAMA DE DATOS LECTURA ###############################################

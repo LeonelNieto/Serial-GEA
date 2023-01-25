@@ -1,7 +1,8 @@
 import serial
 import serial.tools.list_ports
 
-def ConfiguracionSerial(board):
+def ConfiguracionSerial(board):                                 #Para W10 seleccionar el puerto de la placa
+    board = int(board)
     ports = list(serial.tools.list_ports.comports())
     ser = serial.Serial(ports[board].device)
     ser.baudrate = 230400
