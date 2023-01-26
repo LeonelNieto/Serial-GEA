@@ -58,3 +58,26 @@ def WriteButton(dst, ERD, dato, board):
         
     return CompleteFrame
 
+def WriteBoatloader(dst, command, message, board):
+    CompleteFrame = "" 
+    dst = str(dst)
+    command = str(command)
+    message = str(message)
+    board = int(board)
+    lectura = ReadorWrite.Boatloader(dst, command, message) 
+    ser = config_serial.ConfiguracionSerial(board)                                                                   # Función para abrir puerto con la configuración serial
+    ser.write(lectura)                                                                                          # Escribe al puerto serial
+    reading = (ser.read()).hex()                                                                                # Lee el primer byte de datos convertido a hexadecimal
+    if reading != "e2":                                                                                         # Si el primer byte es el byte de inicio
+        CompleteFrame = "Error"
+    else:                                                                                                       # Si no detecta el bit de inicio muestra mensaje de error
+        while (1):
+            reading = (ser.read()).hex()                                                                        # Se lee byte por byte
+            CompleteFrame += reading                                                                            # Concatenación de bytes
+            if reading == "":                                                                                   # Si no lee nada sale del ciclo
+                break
+            elif reading == "e3":                                                                               # Si detecta el byte de paro sale del ciclo
+                break 
+    Mensaje = CompleteFrame.upper()
+    return Mensaje
+

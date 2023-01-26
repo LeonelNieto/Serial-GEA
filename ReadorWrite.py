@@ -16,8 +16,7 @@ def ReadErd(strERD, strDst):
     frame = bitInit + FrameToCalculateCrc + crc + bitStop
     data = bytes.fromhex(frame)
 
-    return data
-    
+    return data  
 
 def WriteErd(strERD, dato, strdst):
     bitInit = "E2"
@@ -44,6 +43,24 @@ def WriteErd(strERD, dato, strdst):
     dataWrite = bytearray.fromhex(frame)
     
     return dataWrite
+
+def Boatloader(Dst, command, message):
+    bitInit = "E2"
+    dst = str(Dst)
+    src = "E4"
+    cmd = str(command)
+    msg = str(message)
+    bitStop = "E3"
+    longitud = int(((len(bitInit + dst + src + cmd + msg + bitStop)) + 6) / 2)
+    lenght = "0x{:02x}".format(longitud)
+    lenght = str(lenght[2: ])   
+    FrameToCalculateCrc = dst + lenght + src + cmd + msg
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)
+    crc = crc[2: ]
+    frame = bitInit + FrameToCalculateCrc + crc + bitStop
+    data = bytes.fromhex(frame)
+
+    return data
 
 ################################### TRAMA DE DATOS LECTURA ###############################################
 
