@@ -23,17 +23,12 @@ def ReadButton(dst, ERD, board):                                                
             while (1):
                 reading = (ser.read()).hex()                                                                        # Se lee byte por byte
                 CompleteFrame += reading                                                                            # Concatenación de bytes
-                if reading == "":                                                                                   # Si no lee nada sale del ciclo
-                    break
-                elif reading == "e3":                                                                               # Si detecta el byte de paro sale del ciclo
+                if reading == "e3":                                                                               # Si detecta el byte de paro sale del ciclo
                     break 
     return CompleteFrame
         
 def WriteButton(dst, ERD, dato, board):
     CompleteFrame = ""
-    dst = str(dst)
-    ERD = str(ERD)
-    dato = str(dato)
     dato = dato.replace(" ", "")
     longitudERD = vrlen.longitudERD(ERD)
     if longitudERD == "Fallo":
