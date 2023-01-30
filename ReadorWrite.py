@@ -2,8 +2,7 @@ import Crc
 
 def ReadErd(ERD, dst):
     longitud = int(((len("E2" + dst + "E4" + "A000" + ERD + "E3")) + 6) / 2)
-    lenght = "0x{:02x}".format(longitud)
-    lenght = str(lenght[2: ])   
+    lenght = "{:02x}".format(longitud) 
     FrameToCalculateCrc = dst + lenght + "E4" + "A000" + ERD
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)
     crc = crc[2: ]
