@@ -7,9 +7,7 @@ def SerialSettings(board):
     return ser
 
 def ReadButton(dst, ERD, board):                                                                                               # Se ejecuta cuando se presiona el botón Read
-    CompleteFrame = ""                                                                                          # Limpia la trama
-    dst = str(dst)                                                                                        # Obtiene los datos del entry Dst
-    ERD = str(ERD)                                                                                        # Obtiene los datos del entry ERD
+    CompleteFrame = ""                                                                                          # Limpia la trama                                                                                      # Obtiene los datos del entry ERD
     longitudERD = vrlen.longitudERD(ERD)
     board = int(board) 
     if longitudERD == "Fallo":
