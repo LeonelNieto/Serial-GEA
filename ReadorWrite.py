@@ -1,11 +1,9 @@
 import Crc
 
-def ReadErd(strERD, strDst):
+def ReadErd(ERD, dst):
     bitInit = "E2"
-    dst = str(strDst)
     src = "E4"
     cmd = "A000"
-    ERD = str(strERD)
     bitStop = "E3"
     longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)
     lenght = "0x{:02x}".format(longitud)
