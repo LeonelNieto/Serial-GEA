@@ -2,18 +2,14 @@ import config_serial
 import ReadorWrite
 import verifylength as vrlen
 
-def SerialSettings(board):
-    ser = config_serial.ConfiguracionSerial(board)
-    return ser
-
-def ReadButton(dst, ERD, board):
+def ReadButton(dst, ERD):
     complete_frame = []
     longitud_ERD = vrlen.longitudERD(ERD)
     if longitud_ERD == "Fallo":
         return "Error"
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst) 
-        ser = SerialSettings(board)
+        ser = config_serial.ConfiguracionSerial()
         ser.write(lectura)
         reading = (ser.read(1)).hex()
         if reading != "e2":
@@ -26,7 +22,7 @@ def ReadButton(dst, ERD, board):
                     break
             return ''.join(complete_frame)
         
-def WriteButton(dst, ERD, dato, board):
+def WriteButton(dst, ERD, dato):
     CompleteFrame = ""
     dato = dato.replace(" ", "")
     longitudERD = vrlen.longitudERD(ERD)
@@ -34,7 +30,7 @@ def WriteButton(dst, ERD, dato, board):
         CompleteFrame = "Error"
     else:
         escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)
-        ser = SerialSettings(board)
+        ser = config_serial.ConfiguracionSerial()
         ser.write(escritura)
         reading = (ser.read()).hex()
         if reading == "e2":
