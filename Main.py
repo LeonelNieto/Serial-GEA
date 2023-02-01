@@ -1,27 +1,39 @@
-import config_serial
 import ReadorWrite
 import verifylength as vrlen
+import serial
+import serial.tools.list_ports
+import time
+
+ser = serial.Serial()
+ser.baudrate = 230400
+ser.bytesize = serial.EIGHTBITS
+ser.parity = serial.PARITY_NONE
+ser.xonxoff = False 
+ser.rtscts = False  
+ser.dsrdtr = False
+com_ports = list(serial.tools.list_ports.comports())
+ser.port = com_ports[0].device
+ser.open()
 
 def ReadButton(dst, ERD):
-    complete_frame = []
+    complete_frame = ""
     longitud_ERD = vrlen.longitudERD(ERD)
     if longitud_ERD == "Fallo":
         return "Error"
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst) 
-        ser = config_serial.ConfiguracionSerial()
         ser.write(lectura)
-        reading = (ser.read(1)).hex()
+        reading = (ser.read()).hex()
         if reading != "e2":
             return "Error"
         else:
             while True:
-                reading = (ser.read(1)).hex()
-                complete_frame.append(reading)
+                reading = (ser.read()).hex()
+                complete_frame += reading
                 if reading == "e3":
                     break
-            return ''.join(complete_frame)
-        
+    return complete_frame
+
 def WriteButton(dst, ERD, dato):
     CompleteFrame = ""
     dato = dato.replace(" ", "")
@@ -30,7 +42,7 @@ def WriteButton(dst, ERD, dato):
         CompleteFrame = "Error"
     else:
         escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)
-        ser = config_serial.ConfiguracionSerial()
+        ser = ConfiguracionSerial()
         ser.write(escritura)
         reading = (ser.read()).hex()
         if reading == "e2":
@@ -46,14 +58,14 @@ def WriteButton(dst, ERD, dato):
         
     return CompleteFrame
 
-def WriteBoatloader(dst, command, message, board):
+def WriteBoatloader(dst, command, message):
     CompleteFrame = "" 
     dst = str(dst)
     command = str(command)
     message = str(message)
     board = int(board)
-    lectura = ReadorWrite.Boatloader(dst, command, message) 
-    ser = config_serial.ConfiguracionSerial(board)                                                                   # Función para abrir puerto con la configuración serial
+    lectura = ReadorWrite.Boatloader(dst, command, message)                                                                   # Función para abrir puerto con la configuración serial
+    ser = ConfiguracionSerial()
     ser.write(lectura)                                                                                          # Escribe al puerto serial
     reading = (ser.read()).hex()                                                                                # Lee el primer byte de datos convertido a hexadecimal
     if reading != "e2":                                                                                         # Si el primer byte es el byte de inicio
