@@ -19,20 +19,44 @@ def ReadButton(dst, ERD):
     complete_frame = ""
     longitud_ERD = vrlen.longitudERD(ERD)
     if longitud_ERD == "Fallo":
-        return "Error"
+        complete_frame = "Error"
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst) 
         ser.write(lectura)
-        reading = (ser.read()).hex()
-        if reading != "e2":
-            return "Error"
+        reading = ser.read(1)
+        if reading != b'\xE2':
+            complete_frame = "Error"
         else:
             while True:
-                reading = (ser.read()).hex()
-                complete_frame += reading
-                if reading == "e3":
+                reading = ser.read(1)
+                concatenate = reading.hex()
+                complete_frame += concatenate
+                if reading == b'\xE3':
+                    break
+                if reading == b'':
+                    break
+    if complete_frame[12:16] != ERD:
+        complete_frame = ""
+        ser.write(lectura)
+        reading = ser.read(1)
+        if reading != b'\xE2':
+            complete_frame = "Error"
+        else:
+            while True:
+                reading = ser.read(1)
+                concatenate = reading.hex()
+                complete_frame += concatenate
+                if reading == b'\xE3':
+                    break
+                if reading == b'':
                     break
     return complete_frame
+# while True:
+#     print(ReadButton("C0", "F039"))
+#     print(ReadButton("C0", "2000"))
+#     print(ReadButton("C0", "209E"))
+#     print(ReadButton("C0", "209F"))
+#     print(ReadButton("C0", "f01b"))
 
 def WriteButton(dst, ERD, dato):
     CompleteFrame = ""
@@ -42,21 +66,25 @@ def WriteButton(dst, ERD, dato):
         CompleteFrame = "Error"
     else:
         escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)
-        ser = ConfiguracionSerial()
         ser.write(escritura)
-        reading = (ser.read()).hex()
-        if reading == "e2":
-            while (1):
-                reading = (ser.read()).hex()
-                CompleteFrame += reading
-                if reading == "":
-                    break
-                elif reading == "e3":
-                    break
-        else:
+        reading = (ser.read())
+        if reading != b'\xE2':
             CompleteFrame = "Error"
-        
-    return CompleteFrame
+        else:  
+            while True:
+                reading = ser.read(1)
+                if reading != b'\xE2':
+                    complete_frame = "Error"
+                else:
+                    while True:
+                        reading = ser.read(1)
+                        concatenate = reading.hex()
+                        complete_frame += concatenate
+                        if reading == b'\xE3':
+                            break
+                        if reading == b'':
+                            break
+    return complete_frame
 
 def WriteBoatloader(dst, command, message):
     CompleteFrame = "" 
