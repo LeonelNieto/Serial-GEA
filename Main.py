@@ -35,21 +35,21 @@ def ReadButton(dst, ERD):
                     break
                 if reading == b'':
                     break
-    if complete_frame[12:16] != ERD:
-        complete_frame = ""
-        ser.write(lectura)
-        reading = ser.read(1)
-        if reading != b'\xE2':
-            complete_frame = "Error"
-        else:
-            while True:
-                reading = ser.read(1)
-                concatenate = reading.hex()
-                complete_frame += concatenate
-                if reading == b'\xE3':
-                    break
-                if reading == b'':
-                    break
+    # if complete_frame[12:16] != ERD:
+    #     complete_frame = ""
+    #     ser.write(lectura)
+    #     reading = ser.read(1)
+    #     if reading != b'\xE2':
+    #         complete_frame = "Error"
+    #     else:
+    #         while True:
+    #             reading = ser.read(1)
+    #             concatenate = reading.hex()
+    #             complete_frame += concatenate
+    #             if reading == b'\xE3':
+    #                 break
+    #             if reading == b'':
+    #                 break
     return complete_frame
 # while True:
 #     print(ReadButton("C0", "F039"))
