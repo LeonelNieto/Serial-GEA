@@ -35,40 +35,33 @@ def ReadButton(dst, ERD):
                 if reading == b'':
                     break
     return complete_frame
-# while True:
+
 # print(ReadButton("C0", "E125"))
-#     print(ReadButton("C0", "2000"))
-#     print(ReadButton("C0", "209E"))
-#     print(ReadButton("C0", "209F"))
-#     print(ReadButton("C0", "f01b"))
 
 def WriteButton(dst, ERD, dato):
-    CompleteFrame = ""
+    complete_frame = ""
     dato = dato.replace(" ", "")
     longitudERD = vrlen.longitudERD(ERD)
     if longitudERD == "Fallo":
-        CompleteFrame = "Error"
+        complete_frame = "Error"
     else:
         escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)
         ser.write(escritura)
         reading = (ser.read())
         if reading != b'\xE2':
-            CompleteFrame = "Error"
+            complete_frame = "Error"
         else:  
             while True:
                 reading = ser.read(1)
-                if reading != b'\xE2':
-                    complete_frame = "Error"
-                else:
-                    while True:
-                        reading = ser.read(1)
-                        concatenate = reading.hex()
-                        complete_frame += concatenate
-                        if reading == b'\xE3':
-                            break
-                        if reading == b'':
-                            break
+                concatenate = reading.hex()
+                complete_frame += concatenate
+                if reading == b'\xE3':
+                    break
+                if reading == b'':
+                    break
     return complete_frame
+
+# print(WriteButton("C0", "F039", "02"))
 
 def WriteBoatloader(dst, command, message):
     CompleteFrame = "" 
