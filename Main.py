@@ -2,6 +2,8 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
+import Crc
+import time
 
 ser = serial.Serial()
 ser.baudrate = 230400
@@ -26,17 +28,40 @@ def ReadButton(dst, ERD):
         if reading != b'\xE2':
             complete_frame = "Error"
         else:
-            while True:
-                reading = ser.read(1)
-                concatenate = reading.hex()
-                complete_frame += concatenate
-                if reading == b'\xE3':
-                    break
-                if reading == b'':
-                    break
+            crc_is_ok = False
+            while not crc_is_ok:
+                complete_frame = ""
+                while True:
+                    reading = ser.read(1)
+                    concatenate = reading.hex()
+                    complete_frame += concatenate
+                    if reading == b'\xE3':
+                        BitE0 = complete_frame[-8:-6]
+                        if BitE0 == "e0":
+                            Trama = complete_frame[0:-8]
+                        else:
+                            Trama = complete_frame[0:-6]
+                        crcCalculated = Crc.crc16_ccitt(Trama)
+                        crcCalculated = crcCalculated[2: ]
+                        crcFrame = complete_frame[-6:-2]
+                        if crcCalculated == crcFrame:
+                            crc_is_ok = True
+                            break
+                        else:
+                            complete_frame = ""
+                    if reading == b'':
+                        break
     return complete_frame
 
-# print(ReadButton("C0", "E125"))
+print(ReadButton("C0", "007f"))
+
+# while True:
+#     print(ReadButton("C0", "0031"))
+#     print(ReadButton("C0", "007f"))
+#     print(ReadButton("C0", "003a"))
+#     print(ReadButton("C0", "003b"))
+#     print(ReadButton("C0", "0007"))
+#     time.sleep(0.1)
 
 def WriteButton(dst, ERD, dato):
     complete_frame = ""
