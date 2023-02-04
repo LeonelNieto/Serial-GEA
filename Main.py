@@ -53,7 +53,6 @@ def ReadButton(dst, ERD):
                         break
     return complete_frame
 
-print(ReadButton("C0", "007f"))
 
 # while True:
 #     print(ReadButton("C0", "0031"))
