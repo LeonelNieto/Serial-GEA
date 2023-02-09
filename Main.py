@@ -64,7 +64,6 @@ def WriteBoatloader(dst, command, message):
     dst = str(dst)
     command = str(command)
     message = str(message)
-    board = int(board)
     lectura = ReadorWrite.Boatloader(dst, command, message)                                                                   # Función para abrir puerto con la configuración serial
     ser.write(lectura)                                                                                          # Escribe al puerto serial
     reading = (ser.read()).hex()                                                                                # Lee el primer byte de datos convertido a hexadecimal
@@ -80,4 +79,3 @@ def WriteBoatloader(dst, command, message):
                 break 
     Mensaje = CompleteFrame.upper()
     return Mensaje
-
