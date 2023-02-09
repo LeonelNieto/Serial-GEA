@@ -2,8 +2,6 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
-import Crc
-import time
 
 ser = serial.Serial()
 ser.baudrate = 230400
@@ -37,12 +35,6 @@ def ReadButton(dst, ERD):
                 if reading == b'':
                     break
     return complete_frame
-# while True:
-#     print(ReadButton("C0", "F039"))
-#     print(ReadButton("C0", "2000"))
-#     print(ReadButton("C0", "209E"))
-#     print(ReadButton("C0", "209F"))
-#     print(ReadButton("C0", "f01b"))
 
 def WriteButton(dst, ERD, dato):
     complete_frame = ""
