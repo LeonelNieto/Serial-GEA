@@ -3,17 +3,19 @@ import verifylength as vrlen
 import serial
 import serial.tools.list_ports
 
-ser = serial.Serial()
-ser.baudrate = 230400
-ser.bytesize = serial.EIGHTBITS
-ser.parity = serial.PARITY_NONE
-ser.xonxoff = False 
-ser.rtscts = False  
-ser.dsrdtr = False
-ser.timeout = 0.5
-com_ports = list(serial.tools.list_ports.comports())
-ser.port = com_ports[0].device
-ser.open()
+def SetBoard(board):
+    global ser
+    ser = serial.Serial()
+    ser.baudrate = 230400
+    ser.bytesize = serial.EIGHTBITS
+    ser.parity = serial.PARITY_NONE
+    ser.xonxoff = False 
+    ser.rtscts = False  
+    ser.dsrdtr = False
+    ser.timeout = 0.5
+    com_ports = list(serial.tools.list_ports.comports())
+    ser.port = com_ports[board].device
+    ser.open()
 
 def ReadButton(dst, ERD):
     complete_frame = ""
@@ -25,7 +27,7 @@ def ReadButton(dst, ERD):
         ser.write(lectura)
         reading = ser.read(1)
         if reading != b'\xE2':
-            complete_frame = "AAAAAAAAAA"
+            complete_frame = "Error"
         else:
             while True:
                 reading = ser.read(1)
@@ -36,8 +38,6 @@ def ReadButton(dst, ERD):
                 if reading == b'':
                     break
     return complete_frame
-
-print(ReadButton("C0", "E000"))
 
 def WriteButton(dst, ERD, dato):
     complete_frame = ""
