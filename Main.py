@@ -10,8 +10,9 @@ ser.parity = serial.PARITY_NONE
 ser.xonxoff = False 
 ser.rtscts = False  
 ser.dsrdtr = False
+ser.timeout = 0.5
 com_ports = list(serial.tools.list_ports.comports())
-ser.port = com_ports[1].device
+ser.port = com_ports[0].device
 ser.open()
 
 def ReadButton(dst, ERD):
@@ -24,7 +25,7 @@ def ReadButton(dst, ERD):
         ser.write(lectura)
         reading = ser.read(1)
         if reading != b'\xE2':
-            complete_frame = "Error"
+            complete_frame = "AAAAAAAAAA"
         else:
             while True:
                 reading = ser.read(1)
@@ -35,6 +36,8 @@ def ReadButton(dst, ERD):
                 if reading == b'':
                     break
     return complete_frame
+
+print(ReadButton("C0", "E000"))
 
 def WriteButton(dst, ERD, dato):
     complete_frame = ""
