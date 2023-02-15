@@ -25,15 +25,42 @@ def GEA2ReadErd(ERD, dst):
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)
     crc = crc[2: ]
     frame = bitInit + FrameToCalculateCrc + crc + bitStop
+    print(frame)
     data = bytes.fromhex(frame)
     
-    return data  
+    return data
 
 def WriteErd(strERD, dato, strdst):
     bitInit = "E2"
     dst = str(strdst)
     src = "E4"
     cmd = "A200"
+    count = int((len(dato)) / 2)
+    count = "0x{:02x}".format(count)
+    count = count[2: ]
+    ESC = "E0"
+    ERD = str(strERD)
+    dato = str(dato)
+    bitStop = "E3"
+    longitud = int(((len(bitInit + dst + src + cmd + ERD + count + dato + bitStop)) + 6) / 2)
+    lenght = "0x{:02x}".format(longitud)
+    lenght = str(lenght[2: ])   
+    FrameToCalculateCrc = dst + lenght + src + cmd + ERD + count + dato
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)
+    crc = crc[2: ]
+    if ERD != "0032":  
+        frame = bitInit + FrameToCalculateCrc + crc + bitStop
+    else:
+        frame = bitInit + FrameToCalculateCrc + ESC + crc + bitStop
+    dataWrite = bytearray.fromhex(frame)
+    
+    return dataWrite
+
+def GEA2WriteErd(strERD, dato, strdst):
+    bitInit = "E2"
+    dst = str(strdst)
+    src = "E4"
+    cmd = "F101"
     count = int((len(dato)) / 2)
     count = "0x{:02x}".format(count)
     count = count[2: ]
