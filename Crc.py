@@ -19,12 +19,6 @@ def crc16_ccitt(data_hex):
     
     return crcStr
 
-# print(crc16_ccitt("e421c0a10000007f1480fa0637d43bcfa77fb852caac7c54da2be8d3bee0"))
-
-# e40ec0a10000f0390101387ee3
-#387e
-
-
 ############## Datos Para Calcular CRC ###################
 
 ### dst ### length ### src ###    cmd    ###   ERD    ###  

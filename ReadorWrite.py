@@ -1,14 +1,17 @@
 import Crc
 
 def ReadErd(ERD, dst):
-    longitud = int(((len("E2" + dst + "E4" + "A000" + ERD + "E3")) + 6) / 2)
+    bitInit = "E2"
+    src = "E4"
+    cmd = "A000"
+    bitStop = "E3"
+    longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)
     lenght = "{:02x}".format(longitud) 
-    FrameToCalculateCrc = dst + lenght + "E4" + "A000" + ERD
+    FrameToCalculateCrc = dst + lenght + src + cmd + ERD
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)
     crc = crc[2: ]
-    frame = "E2" + FrameToCalculateCrc + crc + "E3"
+    frame = bitInit + FrameToCalculateCrc + crc + bitStop
     data = bytes.fromhex(frame)
-
     return data  
 
 def GEA2ReadErd(ERD, dst):
@@ -24,7 +27,7 @@ def GEA2ReadErd(ERD, dst):
     frame = bitInit + FrameToCalculateCrc + crc + bitStop
     data = bytes.fromhex(frame)
     
-    return data 
+    return data  
 
 def WriteErd(strERD, dato, strdst):
     bitInit = "E2"

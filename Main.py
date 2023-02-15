@@ -17,21 +17,22 @@ def SetBoard(board):
     ser.port = com_ports[board].device
     ser.open()
     
-def Gea2Serial(board):
-    global Gea2ser
-    Gea2ser = serial.Serial()
-    Gea2ser.baudrate = 19200
-    Gea2ser.bytesize = serial.EIGHTBITS
-    Gea2ser.parity = serial.PARITY_NONE
-    Gea2ser.xonxoff = False 
-    Gea2ser.rtscts = False  
-    Gea2ser.dsrdtr = False
-    Gea2ser.timeout = 0.5
+def GEA2SetBoard(board):
+    global GEA2ser
+    GEA2ser = serial.Serial()
+    GEA2ser.baudrate = 19200
+    GEA2ser.bytesize = serial.EIGHTBITS
+    GEA2ser.parity = serial.PARITY_NONE
+    GEA2ser.xonxoff = False 
+    GEA2ser.rtscts = False  
+    GEA2ser.dsrdtr = False
+    GEA2ser.timeout = 0.5
     com_ports = list(serial.tools.list_ports.comports())
-    Gea2ser.port = com_ports[board].device
-    Gea2ser.open()
+    GEA2ser.port = com_ports[board].device
+    GEA2ser.open()
 
 def ReadButton(dst, ERD):
+    global ser
     complete_frame = ""
     longitud_ERD = vrlen.longitudERD(ERD)
     if longitud_ERD == "Fallo":
@@ -53,20 +54,22 @@ def ReadButton(dst, ERD):
                     break
     return complete_frame
 
-def ReadGEA2ERD(dst, ERD):
+def GEA2Read(dst, ERD):
+    global GEA2ser
     complete_frame = ""
     longitud_ERD = vrlen.longitudERD(ERD)
     if longitud_ERD == "Fallo":
         complete_frame = "Error"
     else:
         lectura = ReadorWrite.GEA2ReadErd(longitud_ERD, dst) 
-        Gea2ser.write(lectura)
-        reading = Gea2ser.read(1)
+        GEA2ser.write(lectura)
+        reading = GEA2ser.read(1)
+        print(reading)
         if reading != b'\xE2':
-            complete_frame = "Error"
+            complete_frame = "ALAA chaval"
         else:
             while True:
-                reading = Gea2ser.read(1)
+                reading = GEA2ser.read(1)
                 concatenate = reading.hex()
                 complete_frame += concatenate
                 if reading == b'\xE3':
