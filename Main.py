@@ -66,7 +66,7 @@ def GEA2Read(dst, ERD):
         reading = GEA2ser.read(1)
         print(reading)
         if reading != b'\xE2':
-            complete_frame = "ALAA chaval"
+            complete_frame = "Error"
         else:
             while True:
                 reading = GEA2ser.read(1)
