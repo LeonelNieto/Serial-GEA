@@ -2,6 +2,7 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
+import time
 
 def SetBoard(board):
     global ser
@@ -106,7 +107,7 @@ def WriteBoatloader(dst, command, message):
     dst = str(dst)
     command = str(command)
     message = str(message)
-    lectura = ReadorWrite.Boatloader(dst, command, message)                                                                   # Función para abrir puerto con la configuración serial
+    lectura = ReadorWrite.Boatloader(dst, command, message)                                                     # Función para abrir puerto con la configuración serial
     ser.write(lectura)                                                                                          # Escribe al puerto serial
     reading = (ser.read()).hex()                                                                                # Lee el primer byte de datos convertido a hexadecimal
     if reading != "e2":                                                                                         # Si el primer byte es el byte de inicio
@@ -121,3 +122,4 @@ def WriteBoatloader(dst, command, message):
                 break 
     Mensaje = CompleteFrame.upper()
     return Mensaje
+
