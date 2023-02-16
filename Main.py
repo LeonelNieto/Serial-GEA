@@ -2,7 +2,6 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
-import time
 
 def SetBoard(board):
     global ser
