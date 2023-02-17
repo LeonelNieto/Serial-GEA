@@ -1,3 +1,21 @@
+# /***********************************************************************/
+# /*                                                                     */
+# /*  FILE          : Crc.py                                             */
+# /*  DATE          : 17/02/2023                                         */
+# /*  DESCRIPTION   : CRC Calcultaor                                     */
+# /*                                                                     */
+# /*  AUTHOR        : Leonel Nieto Lara                                  */
+# /*                                                                     */
+# /*  PROJECT       : GEA3 Tool                                          */
+# /*  IDE           : Visual Studio Code                                 */
+# /*  Python Version: 3.9.13                                             */
+# */                                                                     */
+# /*  Copyright 2012-2023 Mabe TyP                                       */
+# /*  All rights reserved                                                */
+# /*                                                                     */
+# /***********************************************************************/
+
+
 def crc16_ccitt(data_hex):
     data = bytearray.fromhex(data_hex)
     poly = 0x1021
