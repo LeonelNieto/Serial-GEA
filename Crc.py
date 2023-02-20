@@ -15,11 +15,20 @@
 # /*                                                                     */
 # /***********************************************************************/
 
-
+# ****************************************************************************************************
+#  Name:          crc16_ccitt(data_hex)    
+#  Parameters:    data_hex
+#  Returns:       Crc16 CCITT
+#  Called by:     ReadERD(ERD, dst), WriteERD(strERD, dato, strdst), Boatloader(Dst, command, message)
+#  Calls:         N/A
+#  Description:   Calculate CRC16 CCITT for complete the frome to write at the serial, using 
+#                 destination, length, source, command and ERD  
+#               
+# *****************************************************************************************************
 def crc16_ccitt(data_hex):
-    data = bytearray.fromhex(data_hex)
-    poly = 0x1021
-    crc = 0x1021
+    data = bytearray.fromhex(data_hex)                                      # Convierte la trama recibida a bytearray hexadecimal
+    poly = 0x1021                                                           # poly 1021
+    crc = 0x1021                                                            # Valor inicial 1021
     for byte in data:
         for i in range(8):
             bit = (byte >> (7-i) & 1) == 1
@@ -36,6 +45,7 @@ def crc16_ccitt(data_hex):
         crcStr = crcStr[0:2] + "00" + crcStr[2: ]
     
     return crcStr
+
 
 ############## Datos Para Calcular CRC ###################
 

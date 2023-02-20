@@ -11,11 +11,11 @@ def SetBoard(board):                                                            
     ser.parity = serial.PARITY_NONE
     ser.xonxoff = False 
     ser.rtscts = False  
-    ser.dsrdtr = False
-    ser.timeout = 0.5
+    ser.dsrdtr = False                                                              
+    ser.timeout = 0.5                                                                   # Timeout 500 ms si no responde
     com_ports = list(serial.tools.list_ports.comports())                                # Crea una lista para los puertos disponibles
     ser.port = com_ports[board].device                                                  # Se define el puerto a través de LabVIEW
-    ser.open()
+    ser.open()                                                                          # Abre puerto COM
 
 def ReadButton(dst, ERD):                                                               # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
     global ser
