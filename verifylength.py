@@ -15,6 +15,19 @@
 # /*                                                                     */
 # /***********************************************************************/
 
+# /************************************************************************
+#  Name:          longitudERD   
+#  Parameters:    ERD
+#  Returns:       Complete length or ERD
+#                 Fallo
+#  Called by:     ReadButton( ) from (Main.py)
+#                 WriteButton( ) from (Main.py)
+#  Calls:         N/A
+#  Description:   Complete the ERD with 0's in the left if lenght is
+#                 less than 4 else return, if length is 4 return the same
+#                 ERD, else return "Fallo"
+#               
+# ************************************************************************/
 def longitudERD(ERD):
     numeroCaracteres = len(ERD)
     if numeroCaracteres == 0 or numeroCaracteres > 4:

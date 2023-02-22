@@ -21,8 +21,8 @@ import Crc
 #  Name:          ReadErd    
 #  Parameters:    ERD, Destination
 #  Returns:       Frame to write
-#  Called by:     ReadButton(dst, ERD) from (Main.py)
-#  Calls:         crc16_ccitt(data_hex) in (Crc.py)
+#  Called by:     ReadButton( ) from (Main.py)
+#  Calls:         crc16_ccitt( ) in (Crc.py)
 #  Description:   Concatenate the frame to write for serial with GEA, usign
 #                 BitInit, source, command, lenght, ERD, Destination, CRC 
 #                 and bit Stop

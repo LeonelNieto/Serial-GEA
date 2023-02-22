@@ -1,8 +1,36 @@
+# /***********************************************************************/
+# /*                                                                     */
+# /*  FILE          : Main.py                                            */
+# /*  DATE          : 17/02/2023                                         */
+# /*  DESCRIPTION   : Serial GEA3                                        */
+# /*                                                                     */
+# /*  AUTHOR        : Leonel Nieto Lara                                  */
+# /*                                                                     */
+# /*  PROJECT       : GEA3 Tool                                          */
+# /*  IDE           : Visual Studio Code                                 */
+# /*  Python Version: 3.9.13                                             */
+# */                                                                     */
+# /*  Copyright 2012-2023 Mabe TyP                                       */
+# /*  All rights reserved                                                */
+# /*                                                                     */
+# /***********************************************************************/
+
 import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
 
+# /************************************************************************
+#  Name:          SetBoard()    
+#  Parameters:    Board
+#  Returns:       N/A
+#  Called by:     LabVIEW
+#  Calls:         N/A
+#  Description:   Configure serial port to GEA3, conceting to serial com
+#                 with the board through LabVIEW, and define global ser  
+#                 to use to write and read frames.
+#               
+# ************************************************************************/
 def SetBoard(board):                                                                    # Función para configurar el puerto COM
     global ser
     ser = serial.Serial()

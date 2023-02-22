@@ -18,8 +18,12 @@
 # ****************************************************************************************************
 #  Name:          crc16_ccitt(data_hex)    
 #  Parameters:    data_hex
+#                 Data to calculate CRC Frame
+#                 Data =  dst + length + src + cmd + ERD 
 #  Returns:       Crc16 CCITT
-#  Called by:     ReadERD(ERD, dst), WriteERD(strERD, dato, strdst), Boatloader(Dst, command, message)
+#  Called by:     ReadERD( )
+#                 WriteERD( )
+#                 Boatloader( )
 #  Calls:         N/A
 #  Description:   Calculate CRC16 CCITT for complete the frome to write at the serial, using 
 #                 destination, length, source, command and ERD  
