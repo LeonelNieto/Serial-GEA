@@ -15,7 +15,7 @@
 # /*                                                                     */
 # /***********************************************************************/
 
-# ****************************************************************************************************
+# ***********************************************************************************************
 #  Name:          crc16_ccitt(data_hex)    
 #  Parameters:    data_hex
 #                 Data to calculate CRC Frame
@@ -25,10 +25,9 @@
 #                 WriteERD( )
 #                 Boatloader( )
 #  Calls:         N/A
-#  Description:   Calculate CRC16 CCITT for complete the frome to write at the serial, using 
-#                 destination, length, source, command and ERD  
+#  Description:   Calculate CRC16 CCITT for complete the frome to write at the serial.  
 #               
-# *****************************************************************************************************
+# ***********************************************************************************************
 def crc16_ccitt(data_hex):
     data = bytearray.fromhex(data_hex)                                      # Convierte la trama recibida a bytearray hexadecimal
     poly = 0x1021                                                           # poly 1021
@@ -51,7 +50,7 @@ def crc16_ccitt(data_hex):
     return crcStr
 
 
-############## Datos Para Calcular CRC ###################
+############## Datos Para Calcular CRC lectura ###################
 
 ### dst ### length ### src ###    cmd    ###   ERD    ###  
 #    C0       XX        E4       XX XX        XX XX             

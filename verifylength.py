@@ -24,7 +24,7 @@
 #                 WriteButton( ) from (Main.py)
 #  Calls:         N/A
 #  Description:   Complete the ERD with 0's in the left if lenght is
-#                 less than 4 else return, if length is 4 return the same
+#                 less than 4, if length is 4 return the same
 #                 ERD, else return "Fallo"
 #               
 # ************************************************************************/
@@ -42,5 +42,4 @@ def longitudERD(ERD):
         ERD = ERD
     else:
         ERD = "Fallo"
-
     return ERD

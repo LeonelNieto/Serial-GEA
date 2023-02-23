@@ -45,6 +45,17 @@ def SetBoard(board):                                                            
     ser.port = com_ports[board].device                                                  # Se define el puerto a través de LabVIEW
     ser.open()                                                                          # Abre puerto COM
 
+# /************************************************************************
+#  Name:          ReadButton( )    
+#  Parameters:    Destination, ERD
+#  Returns:       Frame read
+#  Called by:     LabVIEW
+#  Calls:         verifylength.longitudERD( )
+#                 ReadorWrite.ReadErd( )
+#  Description:   Write a frame to read a serial, and return a complete
+#                 frame read until reach bit stop.
+#               
+# ************************************************************************/
 def ReadButton(dst, ERD):                                                               # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
     global ser
     complete_frame = ""                                                                 # Se inicializa el string vacio
@@ -68,6 +79,18 @@ def ReadButton(dst, ERD):                                                       
                     break                                                               # Sale del ciclo while
     return complete_frame                                                               # Retorna la trama o mensajes de error.
 
+# /************************************************************************
+#  Name:          WriteButton( )    
+#  Parameters:    Destination, ERD, dato
+#  Returns:       Frame read
+#  Called by:     LabVIEW
+#  Calls:         verifylength.longitudERD( )
+#                 ReadorWrite.WriteErd( )
+#  Description:   Write a frame to write a serial, and read the frame that 
+#                 MC respond to return a complete frame read until 
+#                 reach bit stop.
+#               
+# ************************************************************************/
 def WriteButton(dst, ERD, dato):                                                        # Función para escirbir al ERD, con argumentos; Destination, ERD y dato 
     complete_frame = ""                                                                 # Se inicia el strign de la trama vacío
     dato = dato.replace(" ", "")                                                        # Se eliminan espacios en el argumento dato
@@ -91,6 +114,17 @@ def WriteButton(dst, ERD, dato):                                                
                     break                                                               # Sale del ciclo while
     return complete_frame                                                               # Retorna la trama o mensajes de error
 
+# /************************************************************************
+#  Name:          WriteBootloader( )    
+#  Parameters:    Destination, command, message
+#  Returns:       Frame read
+#  Called by:     LabVIEW
+#  Calls:         ReadorWrite.Boatloader( )
+#  Description:   Write a frame to write a serial message, and read
+#                 the frame that MC respond to return a complete frame 
+#                 read until reach bit stop.
+#               
+# ************************************************************************/
 def WriteBoatloader(dst, command, message):                                             # Función para escribir mensajes con lo argumentos Destination, Comando y Mensaje.
     CompleteFrame = "" 
     dst = str(dst)

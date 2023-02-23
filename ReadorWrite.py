@@ -18,73 +18,86 @@
 import Crc
 
 # /************************************************************************
-#  Name:          ReadErd    
+#  Name:          ReadErd( )    
 #  Parameters:    ERD, Destination
-#  Returns:       Frame to write
+#  Returns:       Frame to write to the serial
 #  Called by:     ReadButton( ) from (Main.py)
 #  Calls:         crc16_ccitt( ) in (Crc.py)
 #  Description:   Concatenate the frame to write for serial with GEA, usign
-#                 BitInit, source, command, lenght, ERD, Destination, CRC 
+#                 BitInit, Destination, lenght, source, Command, CRC
 #                 and bit Stop
 #               
 # ************************************************************************/
 def ReadErd(ERD, dst):
-    bitInit = "E2"
-    src = "E4"
-    cmd = "A000"
-    bitStop = "E3"
-    longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)
-    lenght = "{:02x}".format(longitud) 
-    FrameToCalculateCrc = dst + lenght + src + cmd + ERD
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)
-    crc = crc[2: ]
-    frame = bitInit + FrameToCalculateCrc + crc + bitStop
-    data = bytes.fromhex(frame)
-    return data  
+    bitInit = "E2"                                                                                      # Bit de Inicio
+    src = "E4"                                                                                          # Source
+    cmd = "A000"                                                                                        # Comando de  request para lectura
+    bitStop = "E3"                                                                                      # Bit de Stop
+    longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          # Cálculo de la longitud de la trama
+    lenght = "{:02x}".format(longitud)                                                                  # Conversión a hexadecimal de dos digitos
+    FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                # Concatena trama para calculo de CRC
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC
+    crc = crc[2: ]                                                                                      # Elimina "0x" del CRC
+    frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama de datos completa en hexadecimal
+    data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
+    return data                                                                                         # Retorna la trama a escribir en el serial
 
-def WriteErd(strERD, dato, strdst):
-    bitInit = "E2"
-    dst = str(strdst)
-    src = "E4"
-    cmd = "A200"
-    count = int((len(dato)) / 2)
-    count = "0x{:02x}".format(count)
-    count = count[2: ]
-    ESC = "E0"
-    ERD = str(strERD)
-    dato = str(dato)
-    bitStop = "E3"
-    longitud = int(((len(bitInit + dst + src + cmd + ERD + count + dato + bitStop)) + 6) / 2)
-    lenght = "0x{:02x}".format(longitud)
-    lenght = str(lenght[2: ])   
-    FrameToCalculateCrc = dst + lenght + src + cmd + ERD + count + dato
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)
-    crc = crc[2: ]
-    if ERD != "0032":  
-        frame = bitInit + FrameToCalculateCrc + crc + bitStop
-    else:
-        frame = bitInit + FrameToCalculateCrc + ESC + crc + bitStop
-    dataWrite = bytearray.fromhex(frame)
-    
-    return dataWrite
+# /************************************************************************
+#  Name:          WriteErd( )    
+#  Parameters:    ERD, Dato, Destination
+#  Returns:       Frame to write to the serial
+#  Called by:     WriteButton( ) from (Main.py)
+#  Calls:         crc16_ccitt( ) in (Crc.py)
+#  Description:   Concatenate the frame to write for serial with GEA, usign
+#                 BitInit, Destination, Lenght, Source, Command, ERD,  
+#                 Dato Lenght, Dato, CRC and bit Stop
+#               
+# ************************************************************************/
+def WriteErd(ERD, dato, dst):
+    bitInit = "E2"                                                                                      # Bit de Inicio
+    src = "E4"                                                                                          # Source
+    cmd = "A200"                                                                                        # Comando de request para escritura
+    count = int((len(dato)) / 2)                                                                        # Calculo de la longitud del dato a escribir
+    count = "0x{:02x}".format(count)                                                                    # Conversión a hexadecimal de dos digitos
+    count = count[2: ]                                                                                  # Eliminar "0x" del valor hexadeciaml
+    ESC = "E0"                                                                                          # Bit de ESC
+    bitStop = "E3"                                                                                      # Bit de paro
+    longitud = int(((len(bitInit + dst + src + cmd + ERD + count + dato + bitStop)) + 6) / 2)           # Calculo de la longitud de la trama
+    lenght = "0x{:02x}".format(longitud)                                                                # Conversion de la longitud a hexadecimal de dos digitos
+    lenght = str(lenght[2: ])                                                                           # Eliminacion de "0x" del valor hexadecimlal
+    FrameToCalculateCrc = dst + lenght + src + cmd + ERD + count + dato                                 # Concatenacion de la trama para calcular el CRC
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC
+    crc = crc[2: ]                                                                                      # Se elimina el "0x" del CRC
+    if ERD != "0032":                                                                                   # Si el ERD es diferente del de reset (0032)
+        frame = bitInit + FrameToCalculateCrc + crc + bitStop                                           # Concatena la trama para escribir normalmente
+    else:                                                                                               # Si el ERD es 0032
+        frame = bitInit + FrameToCalculateCrc + ESC + crc + bitStop                                     # Se agrega el bit de ESC antes del CRC
+    dataWrite = bytearray.fromhex(frame)                                                                # Conversion de la trama a bytearray
+    return dataWrite                                                                                    # Retorna la trama a escribir en serial para escritura    
 
-def Boatloader(Dst, command, message):
-    bitInit = "E2"
-    dst = str(Dst)
-    src = "E4"
-    cmd = str(command)
-    msg = str(message)
-    bitStop = "E3"
-    longitud = int(((len(bitInit + dst + src + cmd + msg + bitStop)) + 6) / 2)
-    lenght = "0x{:02x}".format(longitud)
-    lenght = str(lenght[2: ])   
-    FrameToCalculateCrc = dst + lenght + src + cmd + msg
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)
-    crc = crc[2: ]
-    frame = bitInit + FrameToCalculateCrc + crc + bitStop
-    data = bytes.fromhex(frame)
-
-    return data
+# /************************************************************************
+#  Name:          Boatloader( )    
+#  Parameters:    Destination, command, message
+#  Returns:       Frame to write to the serial
+#  Called by:     ReadButton( ) from (Main.py)
+#  Calls:         crc16_ccitt( ) in (Crc.py)
+#  Description:   Concatenate the frame to write for serial with GEA, usign
+#                 BitInit, dst, lenght, src, cmd, message, CRC and bit Stop 
+#               
+# ************************************************************************/
+def Boatloader(dst, cmd, msg):
+    bitInit = "E2"                                                                                      # Bit de inicio
+    src = "E4"                                                                                          # Source
+    bitStop = "E3"                                                                                      # Bit de paro
+    longitud = int(((len(bitInit + dst + src + cmd + msg + bitStop)) + 6) / 2)                          # Calculo del tamaño de la trama sin contar bytes especiales
+    lenght = "0x{:02x}".format(longitud)                                                                # Conversión a hexadecimal de dos digitos
+    lenght = str(lenght[2: ])                                                                           # Elimina "0x" de la longitud
+    FrameToCalculateCrc = dst + lenght + src + cmd + msg                                                # Concatena la trama para el calculo de CRC
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC
+    crc = crc[2: ]                                                                                      # Elimina "0x" del CRC
+    frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama para el envío del mensaje serial
+    data = bytes.fromhex(frame)                                                                         # Convierte a bytes la trama a enviar por serial
+    return data                                                                                         # Retorna la trama a escribir en el serial
 
 ################################### TRAMA DE DATOS LECTURA ###############################################
 
