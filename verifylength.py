@@ -29,17 +29,10 @@
 #               
 # ************************************************************************/
 def longitudERD(ERD):
-    numeroCaracteres = len(ERD)
-    if numeroCaracteres == 0 or numeroCaracteres > 4:
-        ERD = "Fallo"
-    elif numeroCaracteres == 1:
-        ERD = "000" + ERD
-    elif numeroCaracteres == 2:
-        ERD = "00" + ERD
-    elif numeroCaracteres == 3:
-        ERD = "0" + ERD
-    elif numeroCaracteres == 4:
-        ERD = ERD
-    else:
-        ERD = "Fallo"
-    return ERD
+    numeroCaracteres = len(ERD)                        # Obtiene el número de caracteres del ERD
+    return {                                           # Diccionario para retornar valores deacuerdo a la longitud
+        1 : "000" + ERD,                               # Longitud del ERD = 1, se agregan tres 0's a la izquierda
+        2 :  "00" + ERD,                               # Longitud del ERD = 2, se agregan dos 0's a la izquierda
+        3 :   "0" + ERD,                               # Longitud del ERD = 3, se agregan un 0 a la izquierda
+        4:          ERD                                # Longitud del ERD = 4, el ERD se queda igual
+    }.get(numeroCaracteres, "Fallo")                   # No detecta ningún valor, retorna fallo
