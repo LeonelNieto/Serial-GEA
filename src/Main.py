@@ -57,11 +57,10 @@ def SetBoard(board):                                                            
 #               
 # ************************************************************************/
 def ReadButton(dst, ERD):                                                               # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
-    global ser
     complete_frame = ""                                                                 # Se inicializa el string vacio
     longitud_ERD = vrlen.longitudERD(ERD)                                               # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
     if longitud_ERD == "Fallo":                                                         # Si la longitud es mayor a 5 envía Fallo
-        complete_frame = "Longitud de ERD demasiado grande"                             # Retorna el mensaje de error.
+        complete_frame = "Longitud de ERD incorrecta"                                   # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                                # Completa la trama con el ERD y destination dado por LabVIEW
         ser.write(lectura)                                                              # Se escribe la trama por serial
