@@ -36,8 +36,7 @@ def ReadErd(ERD, dst):
     longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          # Cálculo de la longitud de la trama
     lenght = "{:02x}".format(longitud)                                                                  # Conversión a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                # Concatena trama para calculo de CRC
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC
-    crc = crc[2: ]                                                                                      # Elimina "0x" del CRC
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC                                                                                   # Elimina "0x" del CRC
     frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama de datos completa en hexadecimal
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
     return data                                                                                         # Retorna la trama a escribir en el serial
@@ -57,16 +56,14 @@ def WriteErd(ERD, dato, dst):
     bitInit = "E2"                                                                                      # Bit de Inicio
     src = "E4"                                                                                          # Source
     cmd = "A200"                                                                                        # Comando de request para escritura
-    ERD_Data_Size = int((len(dato)) / 2)                                                                        # Calculo de la longitud del dato a escribir
-    ERD_Data_Size = "0x{:02x}".format(ERD_Data_Size)                                                                    # Conversión a hexadecimal de dos digitos
-    ERD_Data_Size = ERD_Data_Size[2: ]                                                                                  # Eliminar "0x" del valor hexadeciaml
+    ERD_Data_Size = int((len(dato)) / 2)                                                                # Calculo de la longitud del dato a escribir
+    ERD_Data_Size = "{:02x}".format(ERD_Data_Size)                                                      # Conversión a hexadecimal de dos digitos
     ESC = "E0"                                                                                          # Bit de ESC
     bitStop = "E3"                                                                                      # Bit de paro
     longitud = int(((len(bitInit + dst + src + cmd + ERD + ERD_Data_Size + dato + bitStop)) + 6) / 2)   # Calculo de la longitud de la trama
-    lenght = "0x{:02x}".format(longitud)                                                                # Conversion de la longitud a hexadecimal de dos digitos
+    lenght = "{:02x}".format(longitud)                                                                  # Conversion de la longitud a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD + ERD_Data_Size + dato                         # Concatenacion de la trama para calcular el CRC
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC
-    crc = crc[2: ]                                                                                      # Se elimina el "0x" del CRC
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC                                                                                   # Se elimina el "0x" del CRC
     if ERD != "0032":                                                                                   # Si el ERD es diferente del de reset (0032)
         frame = bitInit + FrameToCalculateCrc + crc + bitStop                                           # Concatena la trama para escribir normalmente
     else:                                                                                               # Si el ERD es 0032
@@ -89,10 +86,9 @@ def Boatloader(dst, cmd, msg):
     src = "E4"                                                                                          # Source
     bitStop = "E3"                                                                                      # Bit de paro
     longitud = int(((len(bitInit + dst + src + cmd + msg + bitStop)) + 6) / 2)                          # Calculo del tamaño de la trama sin contar bytes especiales
-    lenght = "0x{:02x}".format(longitud)                                                                # Conversión a hexadecimal de dos digitos
+    lenght = "{:02x}".format(longitud)                                                                # Conversión a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + msg                                                # Concatena la trama para el calculo de CRC
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC
-    crc = crc[2: ]                                                                                      # Elimina "0x" del CRC
     frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama para el envío del mensaje serial
     data = bytes.fromhex(frame)                                                                         # Convierte a bytes la trama a enviar por serial
     return data                                                                                         # Retorna la trama a escribir en el serial
