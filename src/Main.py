@@ -64,19 +64,20 @@ def ReadButton(dst, ERD):                                                       
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                                # Completa la trama con el ERD y destination dado por LabVIEW
         ser.write(lectura)                                                              # Se escribe la trama por serial
-        reading = ser.read(1)                                                           # Se lee el primer byte
-        if reading != b'\xE2':                                                          # Si el primer byte no es el bit de inicio
-            complete_frame = "Error"                                                    # Retorna Error
-        else:                                                                           # Si el primer byte leido coincide con el bit de Inicio
-            while True:
-                reading = ser.read(1)                                                   # Lee byte por byte
-                concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
-                complete_frame += concatenate                                           # Se concatena byte por byte
-                if reading == b'\xE3':                                                  # Si se lee el bit de Stop
-                    break                                                               # Sale del ciclo while
-                if reading == b'':                                                      # Si no lee nada
-                    break                                                               # Sale del ciclo while
-    return complete_frame                                                               # Retorna la trama o mensajes de error.
+        while True:
+            reading = ser.read(1)                                                           # Se lee el primer byte
+            concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
+            complete_frame += concatenate                                           # Se concatena byte por byte
+            if reading == b'\xE3':                                                  # Si se lee el bit de Stop
+                break                                                               # Sale del ciclo while
+            if reading == b'':                                                      # Si no lee nada
+                break                                                               # Sale del ciclo while
+        BitInicio = complete_frame[0:2]
+        if BitInicio != "e2":
+            complete_frame = "Error"
+        else:
+            complete_frame = complete_frame[2: ]
+        return complete_frame                                                               # Retorna la trama o mensajes de error.
 
 # /************************************************************************
 #  Name:          WriteButton( )    
