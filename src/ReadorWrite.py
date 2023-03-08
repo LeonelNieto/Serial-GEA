@@ -63,7 +63,7 @@ def WriteErd(ERD, dato, dst):
     longitud = int(((len(bitInit + dst + src + cmd + ERD + ERD_Data_Size + dato + bitStop)) + 6) / 2)   # Calculo de la longitud de la trama
     lenght = "{:02x}".format(longitud)                                                                  # Conversion de la longitud a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD + ERD_Data_Size + dato                         # Concatenacion de la trama para calcular el CRC
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC                                                                                   # Se elimina el "0x" del CRC
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC                                                                        
     if ERD != "0032":                                                                                   # Si el ERD es diferente del de reset (0032)
         frame = bitInit + FrameToCalculateCrc + crc + bitStop                                           # Concatena la trama para escribir normalmente
     else:                                                                                               # Si el ERD es 0032
