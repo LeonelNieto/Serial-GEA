@@ -31,7 +31,7 @@ import Crc
 def ReadErd(ERD, dst):
     bitInit = "E2"                                                                                      # Bit de Inicio
     src = "E4"                                                                                          # Source
-    cmd = "A000"                                                                                        # Comando de  request para lectura
+    cmd = "F001"                                                                                        # Comando de  request para lectura
     bitStop = "E3"                                                                                      # Bit de Stop
     longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          # Cálculo de la longitud de la trama
     lenght = "{:02x}".format(longitud)                                                                  # Conversión a hexadecimal de dos digitos
@@ -55,7 +55,7 @@ def ReadErd(ERD, dst):
 def WriteErd(ERD, dato, dst):
     bitInit = "E2"                                                                                      # Bit de Inicio
     src = "E4"                                                                                          # Source
-    cmd = "A200"                                                                                        # Comando de request para escritura
+    cmd = "F101"                                                                                        # Comando de request para escritura
     ERD_Data_Size = int((len(dato)) / 2)                                                                # Calculo de la longitud del dato a escribir
     ERD_Data_Size = "{:02x}".format(ERD_Data_Size)                                                      # Conversión a hexadecimal de dos digitos
     ESC = "E0"                                                                                          # Bit de ESC

@@ -34,7 +34,7 @@ import serial.tools.list_ports
 def SetBoard(board):                                                                    # Función para configurar el puerto COM
     global ser
     ser = serial.Serial()
-    ser.baudrate = 230400                                                               # Baudrate para GEA3
+    ser.baudrate = 19200                                                                # Baudrate para GEA2
     ser.bytesize = serial.EIGHTBITS
     ser.parity = serial.PARITY_NONE                                                          
     ser.timeout = 0.5                                                                   # Timeout 500 ms si no responde
@@ -60,13 +60,14 @@ def ReadButton(dst, ERD):                                                       
         complete_frame = "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
-        ser.write(lectura)                                                          # Se escribe la trama por serial
+        ser.write(lectura)
         while True:
             reading = ser.read(1)                                                   # Se lee el primer byte
             concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
             complete_frame += concatenate                                           # Se concatena byte por byte
-            if reading == b'\xE3':                                                  # Si se lee el bit de Stop
-                break                                                               # Sale del ciclo while
+            print(complete_frame)
+            # if reading == b'\xE3':                                                  # Si se lee el bit de Stop
+            #     break                                                               # Sale del ciclo while
             if reading == b'':                                                      # Si no lee nada
                 break                                                               # Sale del ciclo while
         BitInicio = complete_frame[0:2]
@@ -76,6 +77,8 @@ def ReadButton(dst, ERD):                                                       
             complete_frame = complete_frame[2: ]
         return complete_frame                                                       # Retorna la trama o mensajes de error.
 
+SetBoard(0)
+print(ReadButton("C0", "209f"))
 # /************************************************************************
 #  Name:          WriteButton( )    
 #  Parameters:    Destination, ERD, dato
