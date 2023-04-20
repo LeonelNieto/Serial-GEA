@@ -41,7 +41,7 @@ def crc16_ccitt(data_hex):
                 crc ^= poly
     crc &= 0xffff
     crcStr = "{:04x}".format(crc)
-    
+    print(crcStr)
     return crcStr
 
 ############## Datos Para Calcular CRC lectura ###################

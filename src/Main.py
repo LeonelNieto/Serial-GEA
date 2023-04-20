@@ -36,8 +36,9 @@ def SetBoard(board):                                                            
     ser = serial.Serial()
     ser.baudrate = 19200                                                                # Baudrate para GEA2
     ser.bytesize = serial.EIGHTBITS
-    ser.parity = serial.PARITY_NONE                                                          
-    ser.timeout = 0.5                                                                   # Timeout 500 ms si no responde
+    ser.parity = serial.PARITY_NONE 
+    ser.STOPBITS = None                                                         
+    ser.timeout = 5                                                                   # Timeout 500 ms si no responde
     com_ports = list(serial.tools.list_ports.comports())                                # Crea una lista para los puertos disponibles
     ser.port = com_ports[board].device                                                  # Se define el puerto a través de LabVIEW
     ser.open()                                                                          # Abre puerto COM
@@ -55,6 +56,7 @@ def SetBoard(board):                                                            
 # ************************************************************************/
 def ReadButton(dst, ERD):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
     complete_frame = ""                                                             # Se inicializa el string vacio
+    E3_Found = 0
     longitud_ERD = vrlen.longitudERD(ERD)                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
     if longitud_ERD == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
         complete_frame = "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
@@ -64,21 +66,11 @@ def ReadButton(dst, ERD):                                                       
         while True:
             reading = ser.read(1)                                                   # Se lee el primer byte
             concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
-            complete_frame += concatenate                                           # Se concatena byte por byte
+            complete_frame += concatenate                                           # Se concatena byte por byte                                                           # Sale del ciclo while
             print(complete_frame)
-            # if reading == b'\xE3':                                                  # Si se lee el bit de Stop
-            #     break                                                               # Sale del ciclo while
-            if reading == b'':                                                      # Si no lee nada
-                break                                                               # Sale del ciclo while
-        BitInicio = complete_frame[0:2]
-        if BitInicio != "e2":
-            complete_frame = "Error"
-        else:
-            complete_frame = complete_frame[2: ]
         return complete_frame                                                       # Retorna la trama o mensajes de error.
 
-SetBoard(0)
-print(ReadButton("C0", "209f"))
+
 # /************************************************************************
 #  Name:          WriteButton( )    
 #  Parameters:    Destination, ERD, dato
@@ -146,4 +138,3 @@ def WriteBoatloader(dst, command, message):                                     
                 break 
     Mensaje = CompleteFrame.upper()                                                     # Convierte la trama a Mayusculas
     return Mensaje                                                                      # Retorna la trama o mensaje de error
-
