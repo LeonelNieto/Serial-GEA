@@ -26,7 +26,7 @@ import serial.tools.list_ports
 #  Returns:       N/A
 #  Called by:     LabVIEW
 #  Calls:         N/A
-#  Description:   Configure serial port to GEA3, conceting to serial com
+#  Description:   Configure serial GEA2 port, conecting to serial com
 #                 with the board through LabVIEW, and define global ser  
 #                 to use to write and read frames.
 #               
@@ -38,7 +38,7 @@ def SetBoard(board):                                                            
     ser.bytesize = serial.EIGHTBITS
     ser.parity = serial.PARITY_NONE 
     ser.STOPBITS = None                                                         
-    ser.timeout = 5                                                                   # Timeout 500 ms si no responde
+    ser.timeout = 2                                                                   # Timeout 500 ms si no responde
     com_ports = list(serial.tools.list_ports.comports())                                # Crea una lista para los puertos disponibles
     ser.port = com_ports[board].device                                                  # Se define el puerto a través de LabVIEW
     ser.open()                                                                          # Abre puerto COM
@@ -56,19 +56,27 @@ def SetBoard(board):                                                            
 # ************************************************************************/
 def ReadButton(dst, ERD):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
     complete_frame = ""                                                             # Se inicializa el string vacio
-    E3_Found = 0
     longitud_ERD = vrlen.longitudERD(ERD)                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
     if longitud_ERD == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
         complete_frame = "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
-        ser.write(lectura)
+        ser.write(lectura)                                                        # Se escribe la trama por serial
+        ser.write(ReadorWrite.ReadErdGEA3(longitud_ERD, dst))
         while True:
             reading = ser.read(1)                                                   # Se lee el primer byte
             concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
-            complete_frame += concatenate                                           # Se concatena byte por byte                                                           # Sale del ciclo while
-            print(complete_frame)
-        return complete_frame                                                       # Retorna la trama o mensajes de error.
+            complete_frame += concatenate                                           # Se concatena byte por byte
+            print(complete_frame)                                                        # Sale del ciclo while
+        BitInicio = complete_frame[0:2]                                             # Toma los dos primeros valores
+        if BitInicio != "e2":                                                       # Verifica que no sea el bit de inio
+            complete_frame = "Error"                                                # Si no es manda Error
+        else:                                                                       # Si es el bit de inio
+            complete_frame = complete_frame[2: ]                                    # Manda la trama de datos sin el bit de inicio
+        return complete_frame                                                      # Retorna la trama o mensajes de error.
+
+SetBoard(0)
+print(ReadButton("C0", "32"))
 
 
 # /************************************************************************

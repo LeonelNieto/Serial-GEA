@@ -41,6 +41,20 @@ def ReadErd(ERD, dst):
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
     return data                                                                                         # Retorna la trama a escribir en el serial
 
+
+def ReadErdGEA3(ERD, dst):
+    bitInit = "E2"                                                                                      
+    src = "E4"                                                                                          
+    cmd = "A000"                                                                                        
+    bitStop = "E3"                                                                                      
+    longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          
+    lenght = "{:02x}".format(longitud)                                                                  
+    FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                                                                                                            # Elimina "0x" del CRC
+    frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               
+    data = bytes.fromhex(frame)                                                                         
+    return data 
+
 # /************************************************************************
 #  Name:          WriteErd( )    
 #  Parameters:    ERD, Dato, Destination
