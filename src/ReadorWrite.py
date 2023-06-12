@@ -30,14 +30,15 @@ import Crc
 # ************************************************************************/
 def ReadErd(ERD, dst):
     bitInit = "E2"                                                                                      # Bit de Inicio
-    src = "E4"                                                                                          # Source
-    cmd = "F001"                                                                                        # Comando de  request para lectura
+    src = "E5"                                                                                          # Source
+    cmd = "A051"                                                                                        # Comando de  request para lectura
     bitStop = "E3"                                                                                      # Bit de Stop
     longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          # Cálculo de la longitud de la trama
     lenght = "{:02x}".format(longitud)                                                                  # Conversión a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                # Concatena trama para calculo de CRC
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC                                                                                   # Elimina "0x" del CRC
     frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama de datos completa en hexadecimal
+    print(frame)
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
     return data                                                                                         # Retorna la trama a escribir en el serial
 

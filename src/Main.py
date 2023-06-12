@@ -19,6 +19,7 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
+import time
 
 # /************************************************************************
 #  Name:          SetBoard()    
@@ -61,21 +62,15 @@ def ReadButton(dst, ERD):                                                       
         complete_frame = "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
-        ser.write(lectura)                                                        # Se escribe la trama por serial
-        ser.write(ReadorWrite.ReadErdGEA3(longitud_ERD, dst))
+        print(lectura)
+        ser.write(lectura)                                                          # Se escribe la trama por serial
         while True:
             reading = ser.read(1)                                                   # Se lee el primer byte
             concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
             complete_frame += concatenate                                           # Se concatena byte por byte
-            print(complete_frame)                                                        # Sale del ciclo while
-        BitInicio = complete_frame[0:2]                                             # Toma los dos primeros valores
-        if BitInicio != "e2":                                                       # Verifica que no sea el bit de inio
-            complete_frame = "Error"                                                # Si no es manda Error
-        else:                                                                       # Si es el bit de inio
-            complete_frame = complete_frame[2: ]                                    # Manda la trama de datos sin el bit de inicio
-        return complete_frame                                                      # Retorna la trama o mensajes de error.
+            print(complete_frame)                                                        # Sale del ciclo while                                            # Retorna la trama o mensajes de error.
 
-SetBoard(0)
+SetBoard(1)
 print(ReadButton("C0", "32"))
 
 
