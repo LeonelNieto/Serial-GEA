@@ -54,25 +54,32 @@ def SetBoard(board):                                                            
 #                 frame read until reach bit stop.
 #               
 # ************************************************************************/
-def ReadButton(dst, ERD):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD                                                          # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
-    complete_frame = ""                                                             # Se inicializa el string vacio
+def ReadButton(dst, ERD):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
     longitud_ERD = vrlen.longitudERD(ERD)                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
     if longitud_ERD == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
-        complete_frame = "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
+        return "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
         ser.write(lectura)                                                          # Se escribe la trama por serial
         while True:
+            complete_frame = "" 
             reading = ser.read(1)                                                   # Se lee el primer byte
             if reading == b'\xE3':
                 while True:
                     reading = ser.read(1)
                     concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
+                    complete_frame += concatenate                                           # Se concatena byte por byte
                     if reading == b'\xE3' or (reading == b''):
-                        break
-                complete_frame += concatenate                                           # Se concatena byte por byte
-            print(complete_frame)                                                     # Sale del ciclo while                                            # Retorna la trama o mensajes de error.
-
+                        complete_frame = (complete_frame.upper())[2: ]
+                        Dato = complete_frame
+                        Byte_ERD = complete_frame[12:13]
+                        Byte_OK = complete_frame[10:12]
+                        if (Byte_ERD == ERD) and (Byte_OK == "00"):
+                            Longitud_Dato_hex = complete_frame[16:18]
+                            Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                            Dato = complete_frame[18:(18 + Longitud_Dato_int)]
+                            return Dato     
+                                                                
 SetBoard(1)
 print(ReadButton("C0", "F01B"))
 
