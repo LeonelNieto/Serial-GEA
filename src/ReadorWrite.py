@@ -31,30 +31,16 @@ import Crc
 def ReadErd(ERD, dst):
     bitInit = "E2"                                                                                      # Bit de Inicio
     src = "E5"                                                                                          # Source
-    cmd = "A051"                                                                                        # Comando de  request para lectura
+    cmd = "F001"                                                                                        # Comando de  request para lectura
     bitStop = "E3"                                                                                      # Bit de Stop
     longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          # Cálculo de la longitud de la trama
     lenght = "{:02x}".format(longitud)                                                                  # Conversión a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                # Concatena trama para calculo de CRC
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC                                                                                   # Elimina "0x" del CRC
     frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama de datos completa en hexadecimal
-    print(frame)
+    print("ESTO ESCRIBO YO: " + frame)
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
     return data                                                                                         # Retorna la trama a escribir en el serial
-
-
-def ReadErdGEA3(ERD, dst):
-    bitInit = "E2"                                                                                      
-    src = "E4"                                                                                          
-    cmd = "A000"                                                                                        
-    bitStop = "E3"                                                                                      
-    longitud = int(((len(bitInit + dst + src + cmd + ERD + bitStop)) + 6) / 2)                          
-    lenght = "{:02x}".format(longitud)                                                                  
-    FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                
-    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                                                                                                            # Elimina "0x" del CRC
-    frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               
-    data = bytes.fromhex(frame)                                                                         
-    return data 
 
 # /************************************************************************
 #  Name:          WriteErd( )    
