@@ -19,12 +19,13 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
+import time
 
 # /************************************************************************
 #  Name:          SetBoard()    
 #  Parameters:    Board
 #  Returns:       N/A
-#  Called by:     LabVIEW
+#  Called by:     N/A
 #  Calls:         N/A
 #  Description:   Configure serial GEA2 port, conecting to serial com
 #                 with the board through LabVIEW, and define global ser  
@@ -61,32 +62,35 @@ def ReadErd(dst, ERD):                                                          
         return "Longitud de ERD incorrecta"                                         # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
-        ser.write(lectura) 
         while True:
-            complete_frame = "" 
-            reading = ser.read(1)                                                   # Se lee el primer byte
-            if reading == b'\xE3':
-                while True:
-                    reading = ser.read(1)
-                    concatenate = reading.hex()                                     # Se convierte a hexadecimal la lectura serial
-                    complete_frame += concatenate                                   # Se concatena byte por byte
-                    if reading == b'\xE3' or (reading == b''):
-                        break
-                complete_frame = (complete_frame.upper())
-                print(complete_frame)
-                Dato = complete_frame
-                Byte_OK = complete_frame[12:14]
-                print("BYTE OK: " + Byte_OK)
-                Byte_ERD = complete_frame[14:18]
-                print("BYTE ERD: " + Byte_ERD)
-                if (Byte_ERD == ERD) and (Byte_OK == "01"):
-                    Longitud_Dato_hex = complete_frame[18:20]
-                    Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                    Dato = complete_frame[20:(20 + Longitud_Dato_int)]       
-                    return Dato, complete_frame[2: ]
+            ser.write(lectura) 
+            while True:
+                reading = ser.read(1)                                                   # Se lee el primer byte
+                if reading == b'\xE3':
+                    complete_frame = "" 
+                    while True:
+                        reading = ser.read(1)
+                        concatenate = reading.hex()                                     # Se convierte a hexadecimal la lectura serial
+                        complete_frame += concatenate                                   # Se concatena byte por byte
+                        if reading == b'\xE3' or (reading == b''):
+                            break
+                    complete_frame = (complete_frame.upper())
+                    print(complete_frame)
+                    Dato = complete_frame
+                    Byte_OK = complete_frame[12:14]
+                    print("BYTE OK: " + Byte_OK)
+                    Byte_ERD = complete_frame[14:18]
+                    print("BYTE ERD: " + Byte_ERD)
+                    if (Byte_ERD == ERD) and (Byte_OK == "01"):
+                        Longitud_Dato_hex = complete_frame[18:20]
+                        Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                        Dato = complete_frame[20:(20 + Longitud_Dato_int)]
+                        break     
+                    ser.write(lectura)   
+            return Dato, complete_frame[2: ]
 
 SetBoard(1)
-print(ReadErd("C0", "31"))
+print(ReadErd("C0", "700"))
 
 # /************************************************************************
 #  Name:          WriteButton( )    
@@ -124,6 +128,9 @@ def WriteButton(dst, ERD, dato):                                                
             complete_frame = complete_frame[2: ]                                    # Manda la trama de datos sin el bit de inicio
         return complete_frame                                                       # Retorna la trama
 
+WriteButton("C0", "0032", "01")
+time.sleep(2)
+print(ReadErd("C0", "32"))
 # /************************************************************************
 #  Name:          WriteBootloader( )    
 #  Parameters:    Destination, command, message
