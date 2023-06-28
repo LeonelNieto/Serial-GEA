@@ -56,34 +56,37 @@ def SetBoard(board):                                                            
 # ************************************************************************/
 def ReadButton(dst, ERD):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
     longitud_ERD = vrlen.longitudERD(ERD)                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
+    ERD = longitud_ERD.upper()
     if longitud_ERD == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
         return "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
+        ser.write(lectura) 
         while True:
             complete_frame = "" 
-            ser.write(lectura) 
-            while True:
-                reading = ser.read(1)                                                   # Se lee el primer byte
-                if reading == b'\xE3':
-                    while True:
-                        reading = ser.read(1)
-                        concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
-                        complete_frame += concatenate                                           # Se concatena byte por byte
-                        if reading == b'\xE3' or (reading == b''):
-                            complete_frame = (complete_frame.upper())[2: ]
-                            Dato = complete_frame
-                            Byte_ERD = complete_frame[12:13]
-                            Byte_OK = complete_frame[10:12]
-                            if (Byte_ERD == ERD) and (Byte_OK == "00"):
-                                Longitud_Dato_hex = complete_frame[16:18]
-                                Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                                Dato = complete_frame[18:(18 + Longitud_Dato_int)]
-                                return Dato
-                            break     
-                                                                
+            reading = ser.read(1)                                                   # Se lee el primer byte
+            if reading == b'\xE3':
+                while True:
+                    reading = ser.read(1)
+                    concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
+                    complete_frame += concatenate                                           # Se concatena byte por byte
+                    if reading == b'\xE3' or (reading == b''):
+                        break
+                complete_frame = (complete_frame.upper())
+                print(complete_frame)
+                Dato = complete_frame
+                Byte_OK = complete_frame[12:14]
+                print("BYTE OK: " + Byte_OK)
+                Byte_ERD = complete_frame[14:18]
+                print("BYTE ERD: " + Byte_ERD)
+                if (Byte_ERD == ERD) and (Byte_OK == "01"):
+                    Longitud_Dato_hex = complete_frame[18:20]
+                    Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                    Dato = complete_frame[20:(20 + Longitud_Dato_int)]       
+                    return Dato, complete_frame[2: ]
+                                                                 
 SetBoard(1)
-print(ReadButton("C0", "F01B"))
+print(ReadButton("C0", "f01b"))
 
 
 # /************************************************************************
