@@ -60,25 +60,27 @@ def ReadButton(dst, ERD):                                                       
         return "Longitud de ERD incorrecta"                               # Retorna el mensaje de error.
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
-        ser.write(lectura)                                                          # Se escribe la trama por serial
         while True:
             complete_frame = "" 
-            reading = ser.read(1)                                                   # Se lee el primer byte
-            if reading == b'\xE3':
-                while True:
-                    reading = ser.read(1)
-                    concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
-                    complete_frame += concatenate                                           # Se concatena byte por byte
-                    if reading == b'\xE3' or (reading == b''):
-                        complete_frame = (complete_frame.upper())[2: ]
-                        Dato = complete_frame
-                        Byte_ERD = complete_frame[12:13]
-                        Byte_OK = complete_frame[10:12]
-                        if (Byte_ERD == ERD) and (Byte_OK == "00"):
-                            Longitud_Dato_hex = complete_frame[16:18]
-                            Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                            Dato = complete_frame[18:(18 + Longitud_Dato_int)]
-                            return Dato     
+            ser.write(lectura) 
+            while True:
+                reading = ser.read(1)                                                   # Se lee el primer byte
+                if reading == b'\xE3':
+                    while True:
+                        reading = ser.read(1)
+                        concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
+                        complete_frame += concatenate                                           # Se concatena byte por byte
+                        if reading == b'\xE3' or (reading == b''):
+                            complete_frame = (complete_frame.upper())[2: ]
+                            Dato = complete_frame
+                            Byte_ERD = complete_frame[12:13]
+                            Byte_OK = complete_frame[10:12]
+                            if (Byte_ERD == ERD) and (Byte_OK == "00"):
+                                Longitud_Dato_hex = complete_frame[16:18]
+                                Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                                Dato = complete_frame[18:(18 + Longitud_Dato_int)]
+                                return Dato
+                            break     
                                                                 
 SetBoard(1)
 print(ReadButton("C0", "F01B"))
