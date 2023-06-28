@@ -16,6 +16,7 @@
 # /***********************************************************************/
 
 import Crc
+import verifylength as vrlen
 
 # /************************************************************************
 #  Name:          ReadErd( )    
@@ -38,8 +39,26 @@ def ReadErd(ERD, dst):
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD                                                # Concatena trama para calculo de CRC
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC                                                                                   # Elimina "0x" del CRC
     frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama de datos completa en hexadecimal
+    print("Esto envio yo: " + frame)
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
     return data                                                                                         # Retorna la trama a escribir en el serial
+
+
+def ReadMultipleErd(*ERDS, dst):
+    bitInit = "E2"                                                                                      
+    src = "E5"                                                                                          
+    cmd = "F001"                                                                                        
+    bitStop = "E3"
+    Total_Erds = ""
+    for Erd in ERDS:
+        Total_Erds += vrlen.longitudERD(Erd)                                                                                   
+    longitud = int(((len(bitInit + dst + src + cmd + Total_Erds + bitStop)) + 6) / 2)                          
+    lenght = "{:02x}".format(longitud)                                                                  
+    FrameToCalculateCrc = dst + lenght + src + cmd + Total_Erds                                                
+    crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                                                                                                             # Elimina "0x" del CRC
+    frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               
+    data = bytes.fromhex(frame)                                                                         
+    return data       
 
 # /************************************************************************
 #  Name:          WriteErd( )    
