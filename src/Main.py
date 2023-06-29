@@ -89,41 +89,6 @@ def ReadErd(dst, ERD):                                                          
                     ser.write(lectura)       
             return Dato, complete_frame[2: ]
 
-def ReadMultipleErds(dst, *ERDS):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
-    Total_Erds = ""
-    for Erd in ERDS:
-        Total_Erds += vrlen.longitudERD(Erd)       
-    if Total_Erds == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
-        return "Longitud de ERD incorrecta"                                         # Retorna el mensaje de error.
-    else:
-        lectura = ReadorWrite.ReadErd(Total_Erds, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
-        while True:
-            ser.write(lectura) 
-            while True:
-                reading = ser.read(1)                                                   # Se lee el primer byte
-                if reading == b'\xE3':
-                    complete_frame = "" 
-                    while True:
-                        reading = ser.read(1)
-                        concatenate = reading.hex()                                     # Se convierte a hexadecimal la lectura serial
-                        complete_frame += concatenate                                   # Se concatena byte por byte
-                        if reading == b'\xE3' or (reading == b''):
-                            break
-                    complete_frame = (complete_frame.upper())
-                    # print(complete_frame)
-                    Dato = complete_frame
-                    Byte_OK = complete_frame[12:14]
-                    # print("BYTE OK: " + Byte_OK)
-                    Byte_ERD = complete_frame[14:18]
-                    # print("BYTE ERD: " + Byte_ERD)
-                    print("Lectura Multiple: " + complete_frame)
-                    if (Byte_ERD == Total_Erds) and (Byte_OK == "01"):
-                        Longitud_Dato_hex = complete_frame[18:20]
-                        Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                        Dato = complete_frame[20:(20 + Longitud_Dato_int)]
-                        break     
-                    # ser.write(lectura)       
-            return Dato, complete_frame[2: ]
 # /************************************************************************
 #  Name:          WriteButton( )    
 #  Parameters:    Destination, ERD, dato
@@ -160,14 +125,8 @@ def WriteButton(dst, ERD, dato):                                                
             complete_frame = complete_frame[2: ]                                    # Manda la trama de datos sin el bit de inicio
         return complete_frame                                                       # Retorna la trama
 
-SetBoard(1)
-print(ReadErd("C0", "700"))
-time.sleep(0.2)
-WriteButton("C0", "0032", "01")
-time.sleep(3.1)
-print(ReadErd("C0", "700"))
-time.sleep(0.2)
-print(ReadMultipleErds("C0", "700", "32", "F01B"))
+
+# print(ReadMultipleErds("C0", "700", "32", "F01B"))
 # /************************************************************************
 #  Name:          WriteBootloader( )    
 #  Parameters:    Destination, command, message
