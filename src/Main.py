@@ -87,7 +87,7 @@ def ReadErd(dst, ERD):                                                          
                         Dato = complete_frame[20:(20 + Longitud_Dato_int)]
                         break     
                     ser.write(lectura)       
-            return Dato, complete_frame[2: ]
+            return Dato
 
 # /************************************************************************
 #  Name:          WriteButton( )    
