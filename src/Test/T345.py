@@ -14,6 +14,7 @@ file_Test = os.path.join(Actual_Path, file_name_Test + ".csv")
 HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Comments"]
 Write_Data_CSV(file_Test, HEADERS)
 
+#Action, dst, ERD, Expected data/data to write, path file
 Read ("C0", Erd_UI_CycleSelection,              "00",     file_Test)    # Step 1
 Read ("C0", Erd_MC_CycleEngineRequestState,     "000005", file_Test)    # Step 2
 Read ("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)    # Step 3

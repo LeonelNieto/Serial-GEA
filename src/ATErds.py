@@ -12,7 +12,7 @@ def Read(dst, ERD, Expected_Data, Path):
     Action = "READ"
     if Data == Expected_Data:
         Result = "PASS"
-        Comments = "N/A"
+        Comments = "---"
     else:
         Result = "FAIL"
         if len(Data) != len(Expected_Data):
@@ -21,9 +21,9 @@ def Read(dst, ERD, Expected_Data, Path):
             Comments = f"Length from data read {Data} ({lenData}) is diferent " +\
                         f"that expected data {Expected_Data} ({lenExpected_Data})"
         else:
-            Comments = "Value is diferent"
+            Comments = f"Expected data {Expected_Data} != Data {Data}"
     Write_Dato = "---" 
-    Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result ,Comments]
+    Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
     print(Data_To_Write)
     
@@ -35,6 +35,7 @@ def Write(dst, ERD, Write_Dato ,Path):
     Expected_Data = "---"
     Result = "DONE"
     Data = "---"
-    Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato ,Result]
+    Comments = "---"
+    Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
     print(Data_To_Write)
