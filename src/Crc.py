@@ -31,16 +31,16 @@
 def crc16_ccitt(data_hex):
     data = bytearray.fromhex(data_hex)                                      # Convierte la trama recibida a bytearray hexadecimal
     poly = 0x1021                                                           # poly 1021
-    crc = 0x1021                                                            # Valor inicial 1021
+    seed = 0x1021                                                            # Valor inicial 1021
     for byte in data:
         for i in range(8):
             bit = (byte >> (7-i) & 1) == 1
-            c15 = (crc >> 15 & 1) == 1
-            crc <<= 1
+            c15 = (seed >> 15 & 1) == 1
+            seed <<= 1
             if c15 ^ bit:
-                crc ^= poly
-    crc &= 0xffff
-    crcStr = "{:04x}".format(crc)
+                seed ^= poly
+    seed &= 0xffff
+    crcStr = "{:04x}".format(seed)
     return crcStr
 
 ############## Datos Para Calcular CRC lectura ###################

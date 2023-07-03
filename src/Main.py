@@ -63,31 +63,41 @@ def ReadErd(dst, ERD):                                                          
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
         while True:
+            time.sleep(0.01)
             ser.write(lectura) 
             while True:
                 reading = ser.read(1)                                                   # Se lee el primer byte
-                if reading == b'\xE3':
+                # print(reading.hex())
+                if reading == b'\xe3':
                     complete_frame = "" 
                     while True:
                         reading = ser.read(1)
                         concatenate = reading.hex()                                     # Se convierte a hexadecimal la lectura serial
                         complete_frame += concatenate                                   # Se concatena byte por byte
-                        if reading == b'\xE3' or (reading == b''):
+                        print(complete_frame)
+                        if reading == b'\xe3' or (reading == b''):
                             break
                     complete_frame = (complete_frame.upper())
-                    # print(complete_frame)
                     Dato = complete_frame
-                    Byte_OK = complete_frame[12:14]
-                    # print("BYTE OK: " + Byte_OK)
-                    Byte_ERD = complete_frame[14:18]
-                    # print("BYTE ERD: " + Byte_ERD)
-                    if (Byte_ERD == ERD) and (Byte_OK == "01"):
+                    if complete_frame[0:6] == "E1E2E4":
+                        Byte_OK = complete_frame[12:14]
+                        Byte_ERD = complete_frame[14:18]
                         Longitud_Dato_hex = complete_frame[18:20]
                         Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                        Dato = complete_frame[20:(20 + Longitud_Dato_int)]
-                        break     
-                    ser.write(lectura)       
-            return Dato
+                        if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[20: ])):
+                            Dato = complete_frame[20:(20 + Longitud_Dato_int)]
+                            return Dato
+                    if complete_frame[0:4] == "E2E4":
+                        # complete_frame == complete_frame[2: ]
+                        Byte_OK = complete_frame[10:12]
+                        Byte_ERD = complete_frame[12:16]
+                        Longitud_Dato_hex = complete_frame[16:18]
+                        Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                        if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[18: ])):
+                            print("Si estoy entrandooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+                            Dato = complete_frame[18:(18 + Longitud_Dato_int)]
+                            return Dato   
+                    break     
 
 # /************************************************************************
 #  Name:          WriteButton( )    

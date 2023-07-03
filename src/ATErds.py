@@ -1,9 +1,7 @@
 from datetime import datetime
 import Main
 import FileCsv
-
-
-Main.SetBoard(0)
+import time
 
 def Read(dst, ERD, Expected_Data, Path):
     Time = datetime.now().strftime("%H:%M:%S")
@@ -26,6 +24,7 @@ def Read(dst, ERD, Expected_Data, Path):
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
     print(Data_To_Write)
+    # time.sleep(1)
     
 def Write(dst, ERD, Write_Dato ,Path):
     Time = datetime.now().strftime("%H:%M:%S")
