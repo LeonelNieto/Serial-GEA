@@ -24,9 +24,9 @@ def Read(dst, ERD, Expected_Data, Path):
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
     print(Data_To_Write)
-    # time.sleep(1)
     
 def Write(dst, ERD, Write_Dato ,Path):
+    time.sleep(0.1)
     Time = datetime.now().strftime("%H:%M:%S")
     Dia = datetime.now().strftime("%d-%m-%Y")
     Main.WriteButton(dst, ERD, Write_Dato)
@@ -37,4 +37,5 @@ def Write(dst, ERD, Write_Dato ,Path):
     Comments = "---"
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    time.sleep(0.2)
     print(Data_To_Write)

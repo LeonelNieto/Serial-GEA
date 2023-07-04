@@ -19,7 +19,6 @@ import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
-import time
 
 # /************************************************************************
 #  Name:          SetBoard()    
@@ -63,7 +62,6 @@ def ReadErd(dst, ERD):                                                          
     else:
         lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
         while True:
-            time.sleep(0.01)
             ser.write(lectura) 
             while True:
                 reading = ser.read(1)                                                   # Se lee el primer byte
@@ -74,7 +72,6 @@ def ReadErd(dst, ERD):                                                          
                         reading = ser.read(1)
                         concatenate = reading.hex()                                     # Se convierte a hexadecimal la lectura serial
                         complete_frame += concatenate                                   # Se concatena byte por byte
-                        print(complete_frame)
                         if reading == b'\xe3' or (reading == b''):
                             break
                     complete_frame = (complete_frame.upper())
@@ -84,19 +81,23 @@ def ReadErd(dst, ERD):                                                          
                         Byte_ERD = complete_frame[14:18]
                         Longitud_Dato_hex = complete_frame[18:20]
                         Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                        if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[20: ])):
+                        if (complete_frame[(20 + Longitud_Dato_int):20 + Longitud_Dato_int + 2]) == "E0":
+                            Len_Is_Correct = Longitud_Dato_int + 8 == len(complete_frame[20: ])
+                        else:
+                            Len_Is_Correct = Longitud_Dato_int + 6 == len(complete_frame[20: ])
+                        if (Byte_ERD == ERD) and (Byte_OK == "01") and Len_Is_Correct:
                             Dato = complete_frame[20:(20 + Longitud_Dato_int)]
                             return Dato
-                    if complete_frame[0:4] == "E2E4":
-                        # complete_frame == complete_frame[2: ]
-                        Byte_OK = complete_frame[10:12]
-                        Byte_ERD = complete_frame[12:16]
-                        Longitud_Dato_hex = complete_frame[16:18]
-                        Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                        if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[18: ])):
-                            print("Si estoy entrandooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
-                            Dato = complete_frame[18:(18 + Longitud_Dato_int)]
-                            return Dato   
+                    # if complete_frame[0:4] == "E2E4":
+                    #     # complete_frame == complete_frame[2: ]
+                    #     Byte_OK = complete_frame[10:12]
+                    #     Byte_ERD = complete_frame[12:16]
+                    #     Longitud_Dato_hex = complete_frame[16:18]
+                    #     Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                    #     if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[18: ])):
+                    #         print("Si estoy entrandooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
+                    #         Dato = complete_frame[18:(18 + Longitud_Dato_int)]
+                    #         return Dato   
                     break     
 
 # /************************************************************************

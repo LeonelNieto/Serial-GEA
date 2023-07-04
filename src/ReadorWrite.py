@@ -16,7 +16,6 @@
 # /***********************************************************************/
 
 import Crc
-import verifylength as vrlen
 
 # /************************************************************************
 #  Name:          ReadErd( )    
@@ -41,7 +40,6 @@ def ReadErd(ERD, dst):
     frame = bitInit + FrameToCalculateCrc + crc + bitStop 
     if ERD == "20BE":
         frame = bitInit + FrameToCalculateCrc + crc + "E0" + bitStop                                               # Concatena la trama de datos completa en hexadecimal
-    print(frame)
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
     return data                                                                                         # Retorna la trama a escribir en el serial
 
