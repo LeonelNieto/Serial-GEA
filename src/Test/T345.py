@@ -26,9 +26,10 @@ Read ("C0", Erd_UI_CycleSelection,              "00",     file_Test)    # Step 1
 Read ("C0", Erd_MC_CycleEngineRequestState,     "000005", file_Test)    # Step 2
 Read ("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)    # Step 3
 Read ("C0", Erd_UI_MachineStateExit,            "00",     file_Test)    # Step 4
-Write("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 5
-Read ("C0", Erd_LaundryCurrentSelectedCycle,    "05",     file_Test)    # Step 6
-Read ("C0", Erd_MC_CycleEngineRequestState,     "000105", file_Test)    # Step 7
+Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 5
+Write("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 6
+Read ("C0", Erd_LaundryCurrentSelectedCycle,    "05",     file_Test)    # Step 7
+Read ("C0", Erd_MC_CycleEngineRequestState,     "000105", file_Test)    # Step 8
 Read ("C0", Erd_MC_CycleEngineActualState,      "010A",   file_Test)    # Step 8
 Write("C0", Erd_UI_MachineStateEnter,           "08",     file_Test)    # Step 9
 Read ("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 10
@@ -62,6 +63,7 @@ Read ("C0", Erd_FabricSoftenerOption,           "00",     file_Test)    # Step 3
 Read ("C0", Erd_SpinLevelOption,                "01",     file_Test)    # Step 38
 Read ("C0", Erd_WarmRinseOption,                "01",     file_Test)    # Step 39
 Read ("C0", Erd_WaterTemperatureOption,         "05",     file_Test)    # Step 40
+Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 4
 
 #Back to start
 Write("C0", Erd_Reset,                          "01",     file_Test)
