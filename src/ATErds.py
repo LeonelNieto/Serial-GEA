@@ -26,7 +26,7 @@ def Read(dst, ERD, Expected_Data, Path):
     print(Data_To_Write)
     
 def Write(dst, ERD, Write_Dato ,Path):
-    time.sleep(0.1)
+    time.sleep(0.2)
     Time = datetime.now().strftime("%H:%M:%S")
     Dia = datetime.now().strftime("%d-%m-%Y")
     Main.WriteButton(dst, ERD, Write_Dato)
