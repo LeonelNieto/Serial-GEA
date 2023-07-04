@@ -7,8 +7,12 @@ from datetime import datetime
 from Erd_List import *
 from FileCsv import *
 from Main import SetBoard, ReadErd
+from tkinter import *
+import customtkinter as ctk
 import os
-import tkinter as tk
+
+ctk.set_appearance_mode("dark")
+ctk.set_default_color_theme("dark-blue")
 
 Time = datetime.now().strftime("%H-%M-%S")
 Dia = datetime.now().strftime("%d-%m-%Y")
@@ -30,48 +34,48 @@ HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Wr
 Write_Data_CSV(file_Test, HEADERS)
 
 #Action, dst, ERD, Expected data/data to write, path file
-Step1 = Read ("C0", Erd_UI_CycleSelection,              "00",     file_Test)    # Step 1
-Step2 = Read ("C0", Erd_MC_CycleEngineRequestState,     "000005", file_Test)    # Step 2
-Read ("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)    # Step 3
-Read ("C0", Erd_UI_MachineStateExit,            "00",     file_Test)    # Step 4
-Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 5
-Write("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 6
-Read ("C0", Erd_LaundryCurrentSelectedCycle,    "05",     file_Test)    # Step 7
-Read ("C0", Erd_MC_CycleEngineRequestState,     "000105", file_Test)    # Step 8
-Read ("C0", Erd_MC_CycleEngineActualState,      "010A",   file_Test)    # Step 8
-Write("C0", Erd_UI_MachineStateEnter,           "08",     file_Test)    # Step 9
-Read ("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 10
-Read ("C0", Erd_MC_CycleEngineRequestState,     "000101", file_Test)    # Step 11
-Read ("C0", Erd_MC_CycleEngineActualState,      "0106",   file_Test)    # Step 12
-Read ("C0", Erd_AutoSoakLevelOption,            "00",     file_Test)    # Step 13
-Read ("C0", Erd_DeepFillIncrementalOption,      "00",     file_Test)    # Step 14
-Read ("C0", Erd_ExtraRinseOption,               "00",     file_Test)    # Step 15
-Read ("C0", Erd_SoilLevelOption,                "03",     file_Test)    # Step 16
-Read ("C0", Erd_StainRemovalGuideOption,        "00",     file_Test)    # Step 17
-Read ("C0", Erd_WaterOnDemandSoapDispenseOption,"00",     file_Test)    # Step 18
-Read ("C0", Erd_ControlLockOption,              "00",     file_Test)    # Step 19
-Read ("C0", Erd_DelayWashOption,                "00",     file_Test)    # Step 20
-Read ("C0", Erd_FabricSoftenerOption,           "00",     file_Test)    # Step 21
-Read ("C0", Erd_SpinLevelOption,                "03",     file_Test)    # Step 22
-Read ("C0", Erd_WarmRinseOption,                "00",     file_Test)    # Step 23
-Read ("C0", Erd_WaterTemperatureOption,         "02",     file_Test)    # Step 24
-Write("C0", Erd_UI_CycleSelection,              "03",     file_Test)    # Step 25
-Read ("C0", Erd_LaundryCurrentSelectedCycle,    "04",     file_Test)    # Step 26
-Read ("C0", Erd_MC_CycleEngineRequestState,     "000305", file_Test)    # Step 27
-Read ("C0", Erd_MC_CycleEngineActualState,      "030A",   file_Test)    # Step 28
-Read ("C0", Erd_AutoSoakLevelOption,            "01",     file_Test)    # Step 29
-Read ("C0", Erd_DeepFillIncrementalOption,      "02",     file_Test)    # Step 30
-Read ("C0", Erd_ExtraRinseOption,               "00",     file_Test)    # Step 31
-Read ("C0", Erd_SoilLevelOption,                "02",     file_Test)    # Step 32
-Read ("C0", Erd_StainRemovalGuideOption,        "05",     file_Test)    # Step 33
-Read ("C0", Erd_WaterOnDemandSoapDispenseOption,"00",     file_Test)    # Step 34
-Read ("C0", Erd_ControlLockOption,              "01",     file_Test)    # Step 35
-Read ("C0", Erd_DelayWashOption,                "00",     file_Test)    # Step 36
-Read ("C0", Erd_FabricSoftenerOption,           "00",     file_Test)    # Step 37
-Read ("C0", Erd_SpinLevelOption,                "01",     file_Test)    # Step 38
-Read ("C0", Erd_WarmRinseOption,                "01",     file_Test)    # Step 39
-Read ("C0", Erd_WaterTemperatureOption,         "05",     file_Test)    # Step 40
-Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 4
+Step1  = Read ("C0", Erd_UI_CycleSelection,              "00",     file_Test)    # Step 1
+Step2  = Read ("C0", Erd_MC_CycleEngineRequestState,     "000005", file_Test)    # Step 2
+Step3  = Read ("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)    # Step 3
+Step4  = Read ("C0", Erd_UI_MachineStateExit,            "00",     file_Test)    # Step 4
+Step5  = Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 5
+Step6  = Write("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 6
+Step7  = Read ("C0", Erd_LaundryCurrentSelectedCycle,    "05",     file_Test)    # Step 7
+Step8  = Read ("C0", Erd_MC_CycleEngineRequestState,     "000105", file_Test)    # Step 8
+Step9  = Read ("C0", Erd_MC_CycleEngineActualState,      "010A",   file_Test)    # Step 9
+Step10 = Write("C0", Erd_UI_MachineStateEnter,           "08",     file_Test)    # Step 10
+Step11 = Read ("C0", Erd_UI_CycleSelection,              "01",     file_Test)    # Step 11
+Step12 = Read ("C0", Erd_MC_CycleEngineRequestState,     "000101", file_Test)    # Step 12
+Step13 = Read ("C0", Erd_MC_CycleEngineActualState,      "0106",   file_Test)    # Step 13
+Step14 = Read ("C0", Erd_AutoSoakLevelOption,            "00",     file_Test)    # Step 14
+Step15 = Read ("C0", Erd_DeepFillIncrementalOption,      "00",     file_Test)    # Step 15
+Step16 = Read ("C0", Erd_ExtraRinseOption,               "00",     file_Test)    # Step 16
+Step17 = Read ("C0", Erd_SoilLevelOption,                "03",     file_Test)    # Step 17
+Step18 = Read ("C0", Erd_StainRemovalGuideOption,        "00",     file_Test)    # Step 18
+Step19 = Read ("C0", Erd_WaterOnDemandSoapDispenseOption,"00",     file_Test)    # Step 19
+Step20 = Read ("C0", Erd_ControlLockOption,              "00",     file_Test)    # Step 20
+Step21 = Read ("C0", Erd_DelayWashOption,                "00",     file_Test)    # Step 21
+Step22 = Read ("C0", Erd_FabricSoftenerOption,           "00",     file_Test)    # Step 22
+Step23 = Read ("C0", Erd_SpinLevelOption,                "03",     file_Test)    # Step 23
+Step24 = Read ("C0", Erd_WarmRinseOption,                "00",     file_Test)    # Step 24
+Step25 = Read ("C0", Erd_WaterTemperatureOption,         "02",     file_Test)    # Step 25
+Step26 = Write("C0", Erd_UI_CycleSelection,              "03",     file_Test)    # Step 26
+Step27 = Read ("C0", Erd_LaundryCurrentSelectedCycle,    "04",     file_Test)    # Step 27
+Step28 = Read ("C0", Erd_MC_CycleEngineRequestState,     "000305", file_Test)    # Step 28
+Step29 = Read ("C0", Erd_MC_CycleEngineActualState,      "030A",   file_Test)    # Step 29
+Step30 = Read ("C0", Erd_AutoSoakLevelOption,            "01",     file_Test)    # Step 30
+Step31 = Read ("C0", Erd_DeepFillIncrementalOption,      "02",     file_Test)    # Step 31
+Step32 = Read ("C0", Erd_ExtraRinseOption,               "00",     file_Test)    # Step 32
+Step33 = Read ("C0", Erd_SoilLevelOption,                "02",     file_Test)    # Step 33
+Step34 = Read ("C0", Erd_StainRemovalGuideOption,        "05",     file_Test)    # Step 34
+Step35 = Read ("C0", Erd_WaterOnDemandSoapDispenseOption,"00",     file_Test)    # Step 35
+Step36 = Read ("C0", Erd_ControlLockOption,              "01",     file_Test)    # Step 36
+Step37 = Read ("C0", Erd_DelayWashOption,                "00",     file_Test)    # Step 37
+Step38 = Read ("C0", Erd_FabricSoftenerOption,           "00",     file_Test)    # Step 38
+Step39 = Read ("C0", Erd_SpinLevelOption,                "01",     file_Test)    # Step 39
+Step40 = Read ("C0", Erd_WarmRinseOption,                "01",     file_Test)    # Step 40
+Step41 = Read ("C0", Erd_WaterTemperatureOption,         "05",     file_Test)    # Step 41
+Step42 = Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 42
 
 #Back to start
 Write("C0", Erd_Reset,                          "01",     file_Test)
@@ -120,3 +124,25 @@ Read Erd_WaterTemperatureOption, shall be WaterTemp_Hot (05)
 Read Erd_MC_CycleCount, shall be (0A)'''
 
 AutoDocumentation(texto)
+
+class Table:
+    def __init__(self,root):
+        # code for creating table
+        for i in range(total_rows):
+            for j in range(total_columns):
+                self.Entry = ctk.CTkEntry(root, width=150, height=23, corner_radius=0,
+                               font=('Ruby on Rails',13,'bold'), bg_color="black", fg_color="#1E1E1E",
+                               border_color="#3E3E3E", border_width=0.8, text_color="white")
+                self.Entry.grid(row=i, column=j)
+                self.Entry.insert(END, lst[i][j])
+
+lst = [HEADERS,Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, Step11,
+    Step12, Step13, Step14, Step15, Step16, Step17, Step18, Step19, Step20, Step21,
+    Step22, Step23, Step24, Step25, Step26, Step27, Step28, Step29, Step30, Step31,
+    Step32, Step33, Step34, Step35, Step36, Step37, Step38, Step39, Step40, Step41, Step42]
+
+total_rows = len(lst)
+total_columns = len(lst[0])
+root = ctk.CTk()
+t = Table(root)
+root.mainloop()

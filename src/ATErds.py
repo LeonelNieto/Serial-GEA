@@ -24,6 +24,7 @@ def Read(dst, ERD, Expected_Data, Path):
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
     print(Data_To_Write)
+    return Data_To_Write
     
 def Write(dst, ERD, Write_Dato ,Path):
     time.sleep(0.2)
@@ -39,3 +40,4 @@ def Write(dst, ERD, Write_Dato ,Path):
     FileCsv.Write_Data_CSV(Path, Data_To_Write)
     time.sleep(0.2)
     print(Data_To_Write)
+    return Data_To_Write
