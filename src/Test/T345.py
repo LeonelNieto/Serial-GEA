@@ -78,7 +78,7 @@ Step41 = Read ("C0", Erd_WaterTemperatureOption,         "05",     file_Test)   
 Step42 = Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 42
 
 #Back to start
-Write("C0", Erd_Reset,                          "01",     file_Test)
+# Write("C0", Erd_Reset,                          "01",     file_Test)
 
 texto = '''Read Erd_UI_CycleSelection, shall be (00)
 Read Erd_MC_CycleEngineRequestState shall be (000005):
@@ -130,8 +130,8 @@ class Table:
         # code for creating table
         for i in range(total_rows):
             for j in range(total_columns):
-                self.Entry = ctk.CTkEntry(root, width=150, height=23, corner_radius=0,
-                               font=('Ruby on Rails',13,'bold'), bg_color="black", fg_color="#1E1E1E",
+                self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=0,
+                               font=('Ruby on Rails',12,'bold'), bg_color="black", fg_color="#1E1E1E",
                                border_color="#3E3E3E", border_width=0.8, text_color="white")
                 self.Entry.grid(row=i, column=j)
                 self.Entry.insert(END, lst[i][j])
