@@ -25,12 +25,12 @@ file_Test = os.path.join(Actual_Path, file_name_Test + ".csv")
 SetBoard(1)
 
 Write_Data_CSV(file_Test, ["App Version", ReadErd("C0", Erd_ApplicationVersion)])
-Write_Data_CSV(file_Test, ["Build Hash", ReadErd("C0", Erd_GitHash)])
+Write_Data_CSV(file_Test, ["Build Hash", ReadErd("C0", Erd_GitHash)[0:8]])
 Write_Data_CSV(file_Test, ["Build Number", ReadErd("C0", Erd_BuildNumber)])
 Write_Data_CSV(file_Test, ["Parametric Version", ReadErd("C0", Erd_ParametricVersion)])
 Write_Data_CSV(file_Test, ["MC Bootloader Version", ReadErd("C0", Erd_BootLoaderVersion)])
 
-HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Comments"]
+HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Expected vs Data"]
 Write_Data_CSV(file_Test, HEADERS)
 
 #Action, dst, ERD, Expected data/data to write, path file
@@ -78,7 +78,7 @@ Step41 = Read ("C0", Erd_WaterTemperatureOption,         "05",     file_Test)   
 Step42 = Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 42
 
 #Back to start
-# Write("C0", Erd_Reset,                          "01",     file_Test)
+Write("C0", Erd_Reset,                          "01",     file_Test)
 
 texto = '''Read Erd_UI_CycleSelection, shall be (00)
 Read Erd_MC_CycleEngineRequestState shall be (000005):
@@ -126,15 +126,28 @@ Read Erd_MC_CycleCount, shall be (0A)'''
 AutoDocumentation(texto)
 
 class Table:
-    def __init__(self,root):
-        # code for creating table
+    def __init__(self, root):
         for i in range(total_rows):
             for j in range(total_columns):
-                self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=0,
-                               font=('Ruby on Rails',12,'bold'), bg_color="black", fg_color="#1E1E1E",
-                               border_color="#3E3E3E", border_width=0.8, text_color="white")
+                if lst[i][j] in ["Date",'Time','Action',"ERD", "Expected Data", "Data", "Data to Write", "Result", "Expected vs Data"]:
+                    self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=2,
+                                font=('Lato',13, "bold"), bg_color="black", fg_color="#1E1E1E",
+                                border_color="#3E3E3E", border_width=1, text_color="white", justify="center")
+                elif lst[i][j] == "PASS":
+                    self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=2,
+                                font=('Lato',13,'bold'), bg_color="black", fg_color="#1E1E1E",
+                                border_color="#3E3E3E", border_width=1, text_color="#2DF60D", justify="center")
+                elif lst[i][j] == "FAIL":
+                    self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=2,
+                                font=('Lato',13,'bold'), bg_color="black", fg_color="#1E1E1E",
+                                border_color="#3E3E3E", border_width=1, text_color="red", justify="center")
+                else:
+                    self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=2,
+                                font=('Lato',13), bg_color="black", fg_color="#1E1E1E",
+                                border_color="#3E3E3E", border_width=1, text_color="white", justify="center")
                 self.Entry.grid(row=i, column=j)
                 self.Entry.insert(END, lst[i][j])
+                self.Entry.configure(state="readonly")
 
 lst = [HEADERS,Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, Step11,
     Step12, Step13, Step14, Step15, Step16, Step17, Step18, Step19, Step20, Step21,
