@@ -1,37 +1,13 @@
 import sys
 sys.path.append("D:/GEA3 Python/src")
-
 from ATDocumentation import AutoDocumentation
 from ATErds import *
-from datetime import datetime
 from Erd_List import *
-from FileCsv import *
-from Main import SetBoard, ReadErd
-from tkinter import *
-import customtkinter as ctk
-import os
+from Initialize import Init
+from UiTable import TableResults
 
-ctk.set_appearance_mode("dark")
-ctk.set_default_color_theme("dark-blue")
-
-Time = datetime.now().strftime("%H-%M-%S")
-Dia = datetime.now().strftime("%d-%m-%Y")
-
-Executable_Path = sys.argv[0]
-Actual_Path = os.path.dirname(os.path.abspath(Executable_Path))
-file_name_Test = "T1_Results_" + Dia + "_" + Time
-file_Test = os.path.join(Actual_Path, file_name_Test + ".csv")
-
-SetBoard(1)
-
-Write_Data_CSV(file_Test, ["App Version", ReadErd("C0", Erd_ApplicationVersion)])
-Write_Data_CSV(file_Test, ["Build Hash", ReadErd("C0", Erd_GitHash)])
-Write_Data_CSV(file_Test, ["Build Number", ReadErd("C0", Erd_BuildNumber)])
-Write_Data_CSV(file_Test, ["Parametric Version", ReadErd("C0", Erd_ParametricVersion)])
-Write_Data_CSV(file_Test, ["MC Bootloader Version", ReadErd("C0", Erd_BootLoaderVersion)])
-
-HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Comments"]
-Write_Data_CSV(file_Test, HEADERS)
+HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Expected vs Data"]
+file_Test = Init(HEADERS, Board=1)
 
 #Action, dst, ERD, Expected data/data to write, path file
 Step1  = Read ("C0", Erd_UI_CycleSelection,              "00",     file_Test)    # Step 1
@@ -76,9 +52,7 @@ Step39 = Read ("C0", Erd_SpinLevelOption,                "01",     file_Test)   
 Step40 = Read ("C0", Erd_WarmRinseOption,                "01",     file_Test)    # Step 40
 Step41 = Read ("C0", Erd_WaterTemperatureOption,         "05",     file_Test)    # Step 41
 Step42 = Read ("C0", Erd_MC_CycleCount,                  "0A",     file_Test)    # Step 42
-
-#Back to start
-# Write("C0", Erd_Reset,                          "01",     file_Test)
+Write("C0", Erd_Reset,                          "01",     file_Test)
 
 texto = '''Read Erd_UI_CycleSelection, shall be (00)
 Read Erd_MC_CycleEngineRequestState shall be (000005):
@@ -125,24 +99,9 @@ Read Erd_MC_CycleCount, shall be (0A)'''
 
 AutoDocumentation(texto)
 
-class Table:
-    def __init__(self,root):
-        # code for creating table
-        for i in range(total_rows):
-            for j in range(total_columns):
-                self.Entry = ctk.CTkEntry(root, width=214, height=23, corner_radius=0,
-                               font=('Ruby on Rails',12,'bold'), bg_color="black", fg_color="#1E1E1E",
-                               border_color="#3E3E3E", border_width=0.8, text_color="white")
-                self.Entry.grid(row=i, column=j)
-                self.Entry.insert(END, lst[i][j])
-
 lst = [HEADERS,Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, Step11,
     Step12, Step13, Step14, Step15, Step16, Step17, Step18, Step19, Step20, Step21,
     Step22, Step23, Step24, Step25, Step26, Step27, Step28, Step29, Step30, Step31,
     Step32, Step33, Step34, Step35, Step36, Step37, Step38, Step39, Step40, Step41, Step42]
 
-total_rows = len(lst)
-total_columns = len(lst[0])
-root = ctk.CTk()
-t = Table(root)
-root.mainloop()
+TableResults(lst)
