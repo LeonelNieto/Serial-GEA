@@ -63,13 +63,14 @@ def ReadButton(dst, ERD):                                                       
         ser.write(lectura)                                                          # Se escribe la trama por serial
         while True:
             reading = ser.read(1)                                                   # Se lee el primer byte
+            print(reading)
             concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
             complete_frame += concatenate                                           # Se concatena byte por byte
             print(complete_frame)
             if reading == b'\xE3':                                                  # Si se lee el bit de Stop
                 break                                                               # Sale del ciclo while
-            if reading == b'':                                                      # Si no lee nada
-                break                                                               # Sale del ciclo while
+            # if reading == b'':                                                      # Si no lee nada
+            #     break                                                               # Sale del ciclo while
         BitInicio = complete_frame[0:2]
         if BitInicio != "e2":
             complete_frame = "Error"
@@ -78,8 +79,7 @@ def ReadButton(dst, ERD):                                                       
         return complete_frame                                                       # Retorna la trama o mensajes de error.
 
 SetBoard(0)
-print(ReadButton("C0", "F01B"))
-    
+print(ReadButton("C0", "0002"))
     
 # /************************************************************************
 #  Name:          WriteButton( )    

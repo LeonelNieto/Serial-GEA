@@ -39,6 +39,7 @@ def ReadErd(ERD, dst):
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC                                                                                   # Elimina "0x" del CRC
     frame = bitInit + FrameToCalculateCrc + crc + bitStop                                               # Concatena la trama de datos completa en hexadecimal
     data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
+    print(frame)
     return data                                                                                         # Retorna la trama a escribir en el serial
 
 # /************************************************************************
