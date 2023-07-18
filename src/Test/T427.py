@@ -3,8 +3,10 @@ from ATDocumentation import AutoDocumentation
 from ATErds import *
 from UiTable import TableResults
 
-file_Test = Init(Board=1)
+file_Test = Init()
 
+# Test 1: Erd_EndOfCycleReason should be Unknown on init
+Step0  = Read ("C0", Erd_ResetCount,                     "01",     file_Test) 
 Step1  = Read ("C0", Erd_EndOfCycleReason,               "00",     file_Test)    # Step 1
 Step2  = Read ("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)    # Step 2
 Step3  = Read ("C0", Erd_CriticalFault,                  "00",     file_Test)    # Step 3
@@ -40,9 +42,55 @@ Step27 = Read ("C0", Erd_EndOfCycleReason,               "00",     file_Test)
 Step28 = Read ("C0", Erd_EndOfCycleReason,               "01",     file_Test)
 Step29 = Write("C0", Erd_UI_MachineStateEnter,           "02",     file_Test)
 Step30 = Read ("C0", Erd_EndOfCycleReason,               "04",     file_Test)
+Step31 = Read ("C0", Erd_ResetCount,                     "01",     file_Test) 
 
-lst = [HEADERS,Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, Step11,
-    Step12, Step13, Step14, Step15, Step16, Step17, Step18, Step19, Step20, Step21,
-    Step22, Step23, Step24, Step25, Step26, Step27, Step28, Step29, Step30]
+lst = [HEADERS, Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, 
+    Step11, Step12, Step13, Step14, Step15, Step16, Step17, Step18, Step19, Step20, 
+    Step21, Step22, Step23, Step24, Step25, Step26, Step27, Step28, Step29, Step30, Step31]
 
 TableResults(lst)
+
+texto = """Test 1: Erd_EndOfCycleReason should be Unknown on init
+
+Read Erd_EndOfCycleReason, shall be EndOfCycleReason_Unknown (00)
+Read Erd_UI_MachineStateEnter, shall be UiState_Bootup (00)
+Read Erd_CriticalFault, shall be false (00)
+Read Erd_OredShutDownUIFaults, shall be false (00)
+
+Test 2: When Erd_CriticalFault is set, the EOC reason should be Fault
+Write UiState_Run (08) to Erd_UI_MachineStateEnter
+Write true (01) to Erd_CriticalFault
+Read Erd_EndOfCycleReason, shall be EndOfCycleReason_Fault (05)
+
+Test 3: Erd_EndOfCycleReason should be Unknown when Erd_CriticalFault clears
+Write EndOfCycleReason_Unknown (00) to Erd_EndOfCycleReason
+Write true (01) to Erd_OredShutDownUIFaults
+Write true (01) to Erd_CriticalFault
+Write UiState_Run (08) to Erd_UI_MachineStateEnter
+Write false (00) to Erd_CriticalFault
+Read Erd_EndOfCycleReason, shall be EndOfCycleReason_Unknown (00)
+
+Test 4: Erd_EndOfCycleReason should update to Success when UI transitions from Run to EOC
+Write UiState_Bootup(00) to Erd_UI_MachineStateEnter
+Write EndOfCycleReason_Unknown(00) to Erd_EndOfCycleReason
+Write false(00) to Erd_CriticalFault
+Write false(00) to Erd_OredShutDownUIFaults
+Write EndOfCycleReason_Running (01) to Erd_EndOfCycleReason
+Write UiState_EndOfCycle(20) to Erd_UI_MachineStateEnter
+Read Erd_EndOfCycleReason, shall be EndOfCycleReason_Success(02)
+
+Test 5: Erd_EndOfCycleReason should update to Power Button when transitions from Run to Idle
+Write UiState_Bootup(00) to Erd_UI_MachineStateEnter
+Write EndOfCycleReason_Unknown(00) to Erd_EndOfCycleReason
+Write EndOfCycleReason_Running (01) to Erd_EndOfCycleReason
+Write UiState_Idle(01) to Erd_UI_MachineStateEnter
+Read Erd_EndOfCycleReason, shall be EndOfCycleReason_PowerButton(03)
+
+Test 6: Erd_EndOfCycleReason should update to Cycle Knob when UI transitions form Run to StandBy
+Write UiState_Bootup(00) to Erd_UI_MachineStateEnter
+Write EndOfCycleReason_Unknown(00) to Erd_EndOfCycleReason
+Write EndOfCycleReason_Running (01) to Erd_EndOfCycleReason
+Write UiState_Standby(02) to Erd_UI_MachineStateEnter
+Read Erd_EndOfCycleReason, shall be EndOfCycleReason_CycleKnob(04)"""
+
+AutoDocumentation(texto)
