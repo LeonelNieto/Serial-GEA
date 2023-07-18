@@ -8,7 +8,8 @@ from FileCsv import Write_Data_CSV
 from datetime import datetime
 
 
-def Init(HEADERS, Board=1):
+HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Expected vs Data"]
+def Init(Board=1):
     Time = datetime.now().strftime("%H-%M-%S")
     Dia = datetime.now().strftime("%d-%m-%Y")
 
