@@ -79,7 +79,7 @@ def ReadButton(dst, ERD):                                                       
         return complete_frame                                                       # Retorna la trama o mensajes de error.
 
 SetBoard(0)
-print(ReadButton("C0", "0002"))
+print(ReadButton("C0", "0032"))
     
 # /************************************************************************
 #  Name:          WriteButton( )    
