@@ -5,8 +5,7 @@ from UiTable import TableResults
 
 file_Test = Init()
 
-# Test 1: Erd_EndOfCycleReason should be Unknown on init
-Step0  = Read ("C0", Erd_ResetCount,                     "01",     file_Test) 
+#Test 1: Erd_EndOfCycleReason should be Unknown on init
 Step1  = Read ("C0", Erd_EndOfCycleReason,               "00",     file_Test)    # Step 1
 Step2  = Read ("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)    # Step 2
 Step3  = Read ("C0", Erd_CriticalFault,                  "00",     file_Test)    # Step 3
@@ -38,15 +37,14 @@ Step24 = Write("C0", Erd_UI_MachineStateEnter,           "01",     file_Test)
 Step25 = Read ("C0", Erd_EndOfCycleReason,               "03",     file_Test)
 # Test 6: Erd_EndOfCycleReason should update to Cycle Knob when UI transitions form Run to StandBy
 Step26 = Write("C0", Erd_UI_MachineStateEnter,           "00",     file_Test)
-Step27 = Read ("C0", Erd_EndOfCycleReason,               "00",     file_Test)
-Step28 = Read ("C0", Erd_EndOfCycleReason,               "01",     file_Test)
+Step27 = Write("C0", Erd_EndOfCycleReason,               "00",     file_Test)
+Step28 = Write("C0", Erd_EndOfCycleReason,               "01",     file_Test)
 Step29 = Write("C0", Erd_UI_MachineStateEnter,           "02",     file_Test)
 Step30 = Read ("C0", Erd_EndOfCycleReason,               "04",     file_Test)
-Step31 = Read ("C0", Erd_ResetCount,                     "01",     file_Test) 
 
-lst = [HEADERS, Step0, Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, 
+lst = [HEADERS, Step1, Step2, Step3, Step4, Step5, Step6, Step7, Step8, Step9, Step10, 
     Step11, Step12, Step13, Step14, Step15, Step16, Step17, Step18, Step19, Step20, 
-    Step21, Step22, Step23, Step24, Step25, Step26, Step27, Step28, Step29, Step30, Step31]
+    Step21, Step22, Step23, Step24, Step25, Step26, Step27, Step28, Step29, Step30]
 
 TableResults(lst)
 

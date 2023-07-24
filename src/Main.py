@@ -85,19 +85,19 @@ def ReadErd(dst, ERD):                                                          
                             Len_Is_Correct = Longitud_Dato_int + 8 == len(complete_frame[20: ])
                         else:
                             Len_Is_Correct = Longitud_Dato_int + 6 == len(complete_frame[20: ])
+                        if complete_frame[-6:-2] == "E0E1":
+                            Len_Is_Correct = Longitud_Dato_int + 8 == len(complete_frame[20: ])
                         if (Byte_ERD == ERD) and (Byte_OK == "01") and Len_Is_Correct:
                             Dato = complete_frame[20:(20 + Longitud_Dato_int)]
                             return Dato
-                    # if complete_frame[0:4] == "E2E4":
-                    #     # complete_frame == complete_frame[2: ]
-                    #     Byte_OK = complete_frame[10:12]
-                    #     Byte_ERD = complete_frame[12:16]
-                    #     Longitud_Dato_hex = complete_frame[16:18]
-                    #     Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
-                    #     if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[18: ])):
-                    #         print("Si estoy entrandooooooooooooooooooooooooooooooooooooooooooooooooooooooooo")
-                    #         Dato = complete_frame[18:(18 + Longitud_Dato_int)]
-                    #         return Dato   
+                    if complete_frame[0:4] == "E2E4":
+                        Byte_OK = complete_frame[10:12]
+                        Byte_ERD = complete_frame[12:16]
+                        Longitud_Dato_hex = complete_frame[16:18]
+                        Longitud_Dato_int = int(Longitud_Dato_hex, 16) * 2
+                        if (Byte_ERD == ERD) and (Byte_OK == "01") and (Longitud_Dato_int + 6 == len(complete_frame[18: ])):
+                            Dato = complete_frame[18:(18 + Longitud_Dato_int)]
+                            return Dato   
                     break     
 
 # /************************************************************************
@@ -112,30 +112,14 @@ def ReadErd(dst, ERD):                                                          
 #                 reach bit stop.
 #               
 # ************************************************************************/
-def WriteButton(dst, ERD, dato):                                                    # Función para escirbir al ERD, con argumentos; Destination, ERD y dato 
-    complete_frame = ""                                                             # Se inicia el strign de la trama vacío
-    dato = dato.replace(" ", "")                                                    # Se eliminan espacios en el argumento dato
-    longitudERD = vrlen.longitudERD(ERD)                                            # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
-    if longitudERD == "Fallo":                                                      # Si la longitud es mayor a 5 envía Fallo
-        complete_frame = "Error"                                                    # Retorna Error
-    else:
+def WriteButton(dst, ERD, dato):                                                    # Función para escirbir al ERD, con argumentos; Destination, ERD y dato                                                              # Se inicia el strign de la trama vacío
+    i = 0
+    while i <= 1:
+        i += 1
+        dato = dato.replace(" ", "")                                                    # Se eliminan espacios en el argumento dato
+        longitudERD = vrlen.longitudERD(ERD)                                            # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
         escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)                    # Completa la trama con el ERD, Destination y dato a escribir dado por LabVIEW
         ser.write(escritura)                                                        # Se escribe la trama por serial
-        while True:
-            reading = ser.read(1)                                                   # Se lee el primer byte
-            concatenate = reading.hex()                                             # Se convierte a hexadecimal la lectura serial
-            complete_frame += concatenate                                           # Se concatena byte por byte
-            if reading == b'\xE3':                                                  # Si se lee el bit de Stop
-                break                                                               # Sale del ciclo while
-            if reading == b'':                                                      # Si no lee nada
-                break                                                               # Sale del ciclo while
-        BitInicio = complete_frame[0:2]                                             # Toma los dos primeros valores
-        if BitInicio != "e2":                                                       # Verifica que no sea el bit de inio
-            complete_frame = "Error"                                                # Si no es manda Error
-        else:                                                                       # Si es el bit de inio
-            complete_frame = complete_frame[2: ]                                    # Manda la trama de datos sin el bit de inicio
-        return complete_frame                                                       # Retorna la trama
-
 
 # print(ReadMultipleErds("C0", "700", "32", "F01B"))
 # /************************************************************************
