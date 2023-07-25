@@ -49,12 +49,11 @@ def ReadErd(dst:str, ERD:str) -> str:                                           
     Returns:
         (str): Dato del ERD consultado 
     """
-    longitud_ERD = vrlen.longitudERD(ERD)                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
-    ERD = longitud_ERD.upper()
-    if longitud_ERD == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
+    Erd = vrlen.longitudERD(ERD).upper()                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
+    if Erd == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
         return "Longitud de ERD incorrecta"                                         # Retorna el mensaje de error.
     else:
-        lectura = ReadorWrite.ReadErd(longitud_ERD, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
+        lectura = ReadorWrite.BuildFrameToReadErd(Erd, dst)                            # Completa la trama con el ERD y destination dado por LabVIEW
         while True:
             ser.write(lectura) 
             while True:
@@ -110,8 +109,8 @@ def WriteButton(dst:str, ERD:str, dato:str) -> None:                            
     while i <= 1:
         i += 1
         dato = dato.replace(" ", "")                                                    # Se eliminan espacios en el argumento dato
-        longitudERD = vrlen.longitudERD(ERD)                                            # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
-        escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)                    # Completa la trama con el ERD, Destination y dato a escribir dado por LabVIEW
+        Erd = vrlen.longitudERD(ERD)                                            # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
+        escritura = ReadorWrite.BuildFrameToWriteErd(Erd, dato, dst)                    # Completa la trama con el ERD, Destination y dato a escribir dado por LabVIEW
         ser.write(escritura)                                                        # Se escribe la trama por serial
 
 def WriteBoatloader(dst, command, message):                                             # Función para escribir mensajes con lo argumentos Destination, Comando y Mensaje.
@@ -131,7 +130,7 @@ def WriteBoatloader(dst, command, message):                                     
     dst = str(dst)
     command = str(command)
     message = str(message)
-    lectura = ReadorWrite.Boatloader(dst, command, message)                             # Concatenación de la trama completa a escribir
+    lectura = ReadorWrite.BuildFrameToBootloader(dst, command, message)                             # Concatenación de la trama completa a escribir
     ser.write(lectura)                                                                  # Escribe la trama al puerto serial
     reading = (ser.read()).hex()                                                        # Lee el primer byte de datos y lo convierte a hexadecimal
     if reading != "e2":                                                                 # Si el primer byte no es el byte de inicio
