@@ -1,9 +1,34 @@
+"""
+Módulo para automatizar realiar la lectura y escritura de ERDS,
+y almacenarlos en un archivo excel
+"""
+
 from datetime import datetime
 import Main
 import FileCsv
 import time
 
-def Read(dst, ERD, Expected_Data, Path, board=1):
+def Read(dst:str, ERD:str, Expected_Data:str, Path="", board=1) -> list[str]:
+    """
+    Función que realiza la lectura de los ERDS y lo almacena en un archivo excel
+    
+    Args:
+        dst           (str): Dirección de la tarjeta que se desea comunicar
+        ERD           (str): ERD que se desea consultar
+        Expected_Data (str): Valor que se espera recibir
+        Path          (str): Dirección para crear el archivo csv (default '')
+        board         (int): Selección del puerto COM (default 1)
+        
+    Returns:
+        list[str]: Lista con la fecha, hora, 'READ', ERD, valor esperado, valor leido, '---', PASS/FAIL, comments
+    
+    Example
+    --------
+    >>> Read('C0', '0032', '00', 'C:/Users/LNLMEXID/', 0)
+    ['25-07-2023', '11:37:49', 'READ', '0032', '00', '00', '---', 'PASS', '---']
+    >>> Read('C0', 'F06A', '00', 'C:/Users/LNLMEXID/', 0)
+    ['25-07-2023', '11:22:26', 'READ', 'F06A', '00', '02', '---', 'FAIL', '00 != 02']
+    """
     Main.SetBoard(board)
     Time = datetime.now().strftime("%H:%M:%S")
     Dia = datetime.now().strftime("%d-%m-%Y")
@@ -23,11 +48,31 @@ def Read(dst, ERD, Expected_Data, Path, board=1):
             Comments = f"{Expected_Data} != {Data}"
     Write_Dato = "---" 
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
-    FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    Main.ser.close()
     print(Data_To_Write)
     return Data_To_Write
     
-def Write(dst, ERD, Write_Dato, Path, board=1):
+def Write(dst:str, ERD:str, Write_Dato:str, Path="", board=1) -> list[str]:
+    """
+    Función que realiza la escritura de los ERDS y lo almacena en un archivo excel
+    
+    Args:
+        dst        (str): Dirección de la tarjeta que se desea comunicar
+        ERD        (str): ERD que se desea consultar
+        Write Data (str): Valor que se desea escribir al ERD
+        Path       (str): Dirección para crear el archivo csv (default '')
+        board      (int): Selección del puerto COM (default 1)
+        
+    Returns:
+        list[str]: Lista con la fecha, hora, 'WRITE', ERD, '---', '---', Write_Dato, 'DONE', '---'
+    
+    Example
+    --------
+    >>> Write('C0', '0032', '01', 'C:/Users/LNLMEXID/', 0)
+    ['25-07-2023', '11:37:49', 'WRITE', '0032', '---', '---', '01', 'DONE', '---']
+    """
     Main.SetBoard(board)
     time.sleep(0.3)
     Time = datetime.now().strftime("%H:%M:%S")
@@ -39,7 +84,8 @@ def Write(dst, ERD, Write_Dato, Path, board=1):
     Data = "---"
     Comments = "---"
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
-    FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
     time.sleep(3.4)
     print(Data_To_Write)
     Main.ser.close()

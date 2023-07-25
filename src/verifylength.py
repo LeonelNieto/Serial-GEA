@@ -1,34 +1,25 @@
-# /***********************************************************************/
-# /*                                                                     */
-# /*  FILE          : verifylength.py                                    */
-# /*  DATE          : 17/02/2023                                         */
-# /*  DESCRIPTION   : Calculate ERD length                               */
-# /*                                                                     */
-# /*  AUTHOR        : Leonel Nieto Lara                                  */
-# /*                                                                     */
-# /*  PROJECT       : GEA3 Tool                                          */
-# /*  IDE           : Visual Studio Code                                 */
-# /*  Python Version: 3.9.13                                             */
-# */                                                                     */
-# /*  Copyright 2012-2023 Mabe TyP                                       */
-# /*  All rights reserved                                                */
-# /*                                                                     */
-# /***********************************************************************/
+"""Módulo que completa la longitud de 4
+caracteres del ERD consultado.
+"""
 
-# /************************************************************************
-#  Name:          longitudERD   
-#  Parameters:    ERD
-#  Returns:       Complete length or ERD
-#                 Fallo
-#  Called by:     ReadButton( ) from (Main.py)
-#                 WriteButton( ) from (Main.py)
-#  Calls:         N/A
-#  Description:   Complete the ERD with 0's in the left if lenght is
-#                 less than 4, if length is 4 return the same
-#                 ERD, else return "Fallo"
-#               
-# ************************************************************************/
-def longitudERD(ERD):
+def longitudERD(ERD) -> str:
+    """
+    Función que completa el ERD con '0' a la izquierda si la 
+    longitud es menor que cuatro.
+    
+    Args:
+        ERD (str): ERD que se quiere consultar
+    
+    Returns:
+        (str): Erd completo o Fallo
+        
+    Examples
+    --------
+    >>> longitud('02')
+    '0002'
+    >>> longitud('00122')
+    'Fallo'
+    """
     numeroCaracteres = len(ERD)                        # Obtiene el número de caracteres del ERD
     return {                                           # Diccionario para retornar valores deacuerdo a la longitud
         1 : "000" + ERD,                               # Longitud del ERD = 1, se agregan tres 0's a la izquierda

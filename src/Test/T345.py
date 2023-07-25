@@ -1,13 +1,11 @@
-import sys
-sys.path.append("D:/GEA3 Python/src")
+from Initialize import *
 from ATDocumentation import AutoDocumentation
 from ATErds import *
 from Erd_List import *
-from Initialize import Init
 from UiTable import TableResults
 
 HEADERS = ["Date", "Time", "Action", "ERD", "Expected Data", "Data", "Data to Write", "Result", "Expected vs Data"]
-file_Test = Init(HEADERS, Board=1)
+file_Test = Init(Board=1)
 
 #Action, dst, ERD, Expected data/data to write, path file
 Step1  = Read ("C0", Erd_UI_CycleSelection,              "00",     file_Test)    # Step 1
