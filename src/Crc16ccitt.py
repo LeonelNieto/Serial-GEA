@@ -1,34 +1,16 @@
-# /***********************************************************************/
-# /*                                                                     */
-# /*  FILE          : Crc.py                                             */
-# /*  DATE          : 17/02/2023                                         */
-# /*  DESCRIPTION   : CRC Calcultaor                                     */
-# /*                                                                     */
-# /*  AUTHOR        : Leonel Nieto Lara                                  */
-# /*                                                                     */
-# /*  PROJECT       : GEA3 Tool                                          */
-# /*  IDE           : Visual Studio Code                                 */
-# /*  Python Version: 3.9.13                                             */
-# */                                                                     */
-# /*  Copyright 2012-2023 Mabe TyP                                       */
-# /*  All rights reserved                                                */
-# /*                                                                     */
-# /***********************************************************************/
-
-# ***********************************************************************************************
-#  Name:          crc16_ccitt(data_hex)    
-#  Parameters:    data_hex
-#                 Data to calculate CRC Frame
-#                 Data =  dst + length + src + cmd + ERD 
-#  Returns:       Crc16 CCITT
-#  Called by:     ReadERD( )
-#                 WriteERD( )
-#                 Boatloader( )
-#  Calls:         N/A
-#  Description:   Calculate CRC16 CCITT for complete the frome to write at the serial.  
-#               
-# ***********************************************************************************************
-def crc16_ccitt(data_hex):
+"""
+Módulo para realizar el cálculo del crc16 ccitt
+"""
+def crc16_ccitt(data_hex:str) -> str:
+    """
+    Realiza el cálculo del crc16 ccitt
+    
+    Args:
+        data_hex (str): Trama a calcular el crc
+        
+    Returns:
+        str: crc calculado
+    """
     data = bytearray.fromhex(data_hex)                                      # Convierte la trama recibida a bytearray hexadecimal
     poly = 0x1021                                                           # poly 1021
     seed = 0x1021                                                            # Valor inicial 1021

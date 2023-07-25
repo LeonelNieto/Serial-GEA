@@ -1,3 +1,6 @@
+"""
+Lista de los ERDS usados
+"""
 Erd_BuildNumber                         =   "0031"
 Erd_Reset                               =   "0032"
 Erd_BootLoaderVersion                   =   "0039"

@@ -1,3 +1,6 @@
+"""
+Módulo que contiene funciones especiales.
+"""
 from ATErds import Write
 from Erd_List import Erd_Reset
 
