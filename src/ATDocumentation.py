@@ -1,9 +1,22 @@
+"""
+Este módulo realiza la documentación automatica, agregando 
+PASS and DONE, además de agregar el valor hexadecimal del ERD
+"""
 import re
 from Erd_List import *
 
 erd_dict = {key: value for key, value in locals().items() if key.startswith('Erd_')}
 
-def AutoDocumentation(texto):
+def AutoDocumentation(texto:str) -> None:
+    """
+    Función para documentar automáticamente los tickets
+    
+    Args:
+        texto (str): Texto que se quiere documentar
+        
+    return:
+        print() con el texto documentado
+    """
     texto_modificado = re.sub(r'(?<=\b\w)(?=\b)', '- ', texto)
     for erd_nombre, erd_valor in erd_dict.items():
         erd_regex = re.compile(rf"\b{erd_nombre}\b")
