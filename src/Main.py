@@ -1,37 +1,31 @@
-# /***********************************************************************/
-# /*                                                                     */
-# /*  FILE          : Main.py                                            */
-# /*  DATE          : 17/02/2023                                         */
-# /*  DESCRIPTION   : Serial GEA3                                        */
-# /*                                                                     */
-# /*  AUTHOR        : Leonel Nieto Lara                                  */
-# /*                                                                     */
-# /*  PROJECT       : GEA3 Tool                                          */
-# /*  IDE           : Visual Studio Code                                 */
-# /*  Python Version: 3.9.13                                             */
-# */                                                                     */
-# /*  Copyright 2012-2023 Mabe TyP                                       */
-# /*  All rights reserved                                                */
-# /*                                                                     */
-# /***********************************************************************/
+"""Módulo de lectura, escritura y bootloader ERDS.
+Este modulo tiene la función para configurar
+el serial y las funciones para la lectura
+y escritura de ERDS, así como la función para 
+enviar mensaje al bootloader."""
+
+__author__ = "Leonel Nieto Lara"
+__copyright__ = "Copyright 2023, Mabe TyP"
+__version__ = "0.1.0"
+__maintainer__ = "Leonel Nieto Lara"
+__email__ = "leonel.nieto@mabe.com.mx"
+__status__ = "Develop"
 
 import ReadorWrite
 import verifylength as vrlen
 import serial
 import serial.tools.list_ports
 
-# /************************************************************************
-#  Name:          SetBoard()    
-#  Parameters:    Board
-#  Returns:       N/A
-#  Called by:     N/A
-#  Calls:         N/A
-#  Description:   Configure serial GEA2 port, conecting to serial com
-#                 with the board through LabVIEW, and define global ser  
-#                 to use to write and read frames.
-#               
-# ************************************************************************/
-def SetBoard(board):                                                                    # Función para configurar el puerto COM
+def SetBoard(board: int) -> None:                                                                    # Función para configurar el puerto COM
+    """
+    Función para configurar el puerto serial  GEA2
+    
+    Args:
+        board (int): Numero de puerto de la lista
+        
+    Returns:
+        None
+    """
     global ser
     ser = serial.Serial()
     ser.baudrate = 19200                                                                # Baudrate para GEA2
@@ -43,18 +37,18 @@ def SetBoard(board):                                                            
     ser.port = com_ports[board].device                                                  # Se define el puerto a través de LabVIEW
     ser.open()                                                                          # Abre puerto COM
 
-# /************************************************************************
-#  Name:          ReadButton( )    
-#  Parameters:    Destination, ERD
-#  Returns:       Frame read
-#  Called by:     LabVIEW
-#  Calls:         verifylength.longitudERD( )
-#                 ReadorWrite.ReadErd( )
-#  Description:   Write a frame to read a serial, and return a complete
-#                 frame read.
-#               
-# ************************************************************************/
-def ReadErd(dst, ERD):                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
+def ReadErd(dst:str, ERD:str) -> str:                                                           # Función para leer ERD's donde se le pasan los argumentos de Destinatio y ERD
+    """
+    Función que permite la lectura de ERDS a través
+    del envío de la trama de datos por serial.
+    
+    Args:
+        dst (str): Dirección de la tarjeta que se quiere comunicar
+        ERD (str): ERD que se quiere consultar
+        
+    Returns:
+        (str): Dato del ERD consultado 
+    """
     longitud_ERD = vrlen.longitudERD(ERD)                                           # Verifica la longitud del ERD y agrega 0s si es menor a 4 si es mayor retorna error
     ERD = longitud_ERD.upper()
     if longitud_ERD == "Fallo":                                                     # Si la longitud es mayor a 5 envía Fallo
@@ -65,7 +59,6 @@ def ReadErd(dst, ERD):                                                          
             ser.write(lectura) 
             while True:
                 reading = ser.read(1)                                                   # Se lee el primer byte
-                # print(reading.hex())
                 if reading == b'\xe3':
                     complete_frame = "" 
                     while True:
@@ -100,19 +93,19 @@ def ReadErd(dst, ERD):                                                          
                             return Dato   
                     break     
 
-# /************************************************************************
-#  Name:          WriteButton( )    
-#  Parameters:    Destination, ERD, dato
-#  Returns:       Frame read
-#  Called by:     LabVIEW
-#  Calls:         verifylength.longitudERD( )
-#                 ReadorWrite.WriteErd( )
-#  Description:   Write a frame to write a serial, and read the frame that 
-#                 MC respond to return a complete frame read until 
-#                 reach bit stop.
-#               
-# ************************************************************************/
-def WriteButton(dst, ERD, dato):                                                    # Función para escirbir al ERD, con argumentos; Destination, ERD y dato                                                              # Se inicia el strign de la trama vacío
+def WriteButton(dst:str, ERD:str, dato:str) -> None:                                                    # Función para escirbir al ERD, con argumentos; Destination, ERD y dato                                                              # Se inicia el strign de la trama vacío
+    """
+    Función que permite la escritura de ERDS a través
+    del envío de la trama de datos por serial.
+    
+    Args:
+        dst (str): Dirección de la tarjeta que se quiere comunicar
+        ERD (str): ERD que se quiere consultar
+        dato(str): Dato que se le quiere escribir al ERD
+        
+    Returns:
+        None
+    """
     i = 0
     while i <= 1:
         i += 1
@@ -121,19 +114,19 @@ def WriteButton(dst, ERD, dato):                                                
         escritura = ReadorWrite.WriteErd(longitudERD, dato, dst)                    # Completa la trama con el ERD, Destination y dato a escribir dado por LabVIEW
         ser.write(escritura)                                                        # Se escribe la trama por serial
 
-# print(ReadMultipleErds("C0", "700", "32", "F01B"))
-# /************************************************************************
-#  Name:          WriteBootloader( )    
-#  Parameters:    Destination, command, message
-#  Returns:       Frame read
-#  Called by:     LabVIEW
-#  Calls:         ReadorWrite.Boatloader( )
-#  Description:   Write a frame to write a serial message, and read
-#                 the frame that MC respond to return a complete frame 
-#                 read until reach bit stop.
-#               
-# ************************************************************************/
 def WriteBoatloader(dst, command, message):                                             # Función para escribir mensajes con lo argumentos Destination, Comando y Mensaje.
+    """
+    Función que permite la el envío de mensajes 
+    al bootloader a través de la trama de datos serial.
+    
+    Args:
+        dst     (str): Dirección de la tarjeta que se quiere comunicar
+        command (str): Comando del bootloader
+        message (str): Mensaje que quieres consultar 
+        
+    Returns:
+        (str): Trama de datos del bootloader
+    """
     CompleteFrame = "" 
     dst = str(dst)
     command = str(command)
