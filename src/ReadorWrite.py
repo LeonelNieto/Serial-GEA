@@ -80,7 +80,7 @@ def WriteErd(ERD, dato, dst):
     lenght = "{:02x}".format(longitud)                                                                  # Conversion de la longitud a hexadecimal de dos digitos
     FrameToCalculateCrc = dst + lenght + src + cmd + ERD + ERD_Data_Size + dato                         # Concatenacion de la trama para calcular el CRC
     crc = Crc.crc16_ccitt(FrameToCalculateCrc)                                                          # Modulo para calcular CRC                                                                        
-    if ERD != "0032":                                                                                   # Si el ERD es diferente del de reset (0032)
+    if ERD not in ["0032", "F097"]:                                                                                   # Si el ERD es diferente del de reset (0032)
         frame = bitInit + FrameToCalculateCrc + crc + bitStop                                           # Concatena la trama para escribir normalmente
     else:                                                                                               # Si el ERD es 0032
         frame = bitInit + FrameToCalculateCrc + ESC + crc + bitStop                                     # Se agrega el bit de ESC antes del CRC
