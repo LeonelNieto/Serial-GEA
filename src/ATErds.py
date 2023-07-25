@@ -3,7 +3,7 @@ import Main
 import FileCsv
 import time
 
-def Read(dst, ERD, Expected_Data, Path, board=1):
+def Read(dst:str, ERD:str, Expected_Data:str, Path="", board=1):
     Main.SetBoard(board)
     Time = datetime.now().strftime("%H:%M:%S")
     Dia = datetime.now().strftime("%d-%m-%Y")
@@ -23,11 +23,13 @@ def Read(dst, ERD, Expected_Data, Path, board=1):
             Comments = f"{Expected_Data} != {Data}"
     Write_Dato = "---" 
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
-    FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    Main.ser.close()
     print(Data_To_Write)
     return Data_To_Write
     
-def Write(dst, ERD, Write_Dato, Path, board=1):
+def Write(dst:str, ERD:str, Write_Dato:str, Path="", board=1):
     Main.SetBoard(board)
     time.sleep(0.3)
     Time = datetime.now().strftime("%H:%M:%S")
@@ -39,7 +41,8 @@ def Write(dst, ERD, Write_Dato, Path, board=1):
     Data = "---"
     Comments = "---"
     Data_To_Write = [Dia, Time, Action, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
-    FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
     time.sleep(3.4)
     print(Data_To_Write)
     Main.ser.close()

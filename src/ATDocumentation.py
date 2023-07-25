@@ -18,6 +18,3 @@ def AutoDocumentation(texto):
 
     texto_modificado = '\n'.join(lineas)
     print(texto_modificado)
-    
-texto = """ """
-AutoDocumentation(texto)
