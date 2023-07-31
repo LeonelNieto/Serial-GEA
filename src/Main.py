@@ -69,17 +69,14 @@ def ReadButton(dst, ERD):                                                       
             print(complete_frame)
             if reading == b'\xE3':                                                  # Si se lee el bit de Stop
                 break                                                               # Sale del ciclo while
-            # if reading == b'':                                                      # Si no lee nada
-            #     break                                                               # Sale del ciclo while
+            if reading == b'':                                                      # Si no lee nada
+                break                                                               # Sale del ciclo while
         BitInicio = complete_frame[0:2]
         if BitInicio != "e2":
             complete_frame = "Error"
         else:
             complete_frame = complete_frame[2: ]
         return complete_frame                                                       # Retorna la trama o mensajes de error.
-
-SetBoard(0)
-print(ReadButton("C0", "0032"))
     
 # /************************************************************************
 #  Name:          WriteButton( )    
