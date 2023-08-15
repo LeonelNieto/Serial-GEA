@@ -6,6 +6,7 @@ y almacenarlos en un archivo excel
 from datetime import datetime
 import Main
 import FileCsv
+import messagepopup
 import time
 
 def Read(dst:str, ERD:str, Expected_Data:str, Path="", board=1) -> list[str]:
@@ -90,3 +91,12 @@ def Write(dst:str, ERD:str, Write_Dato:str, Path="", board=1) -> list[str]:
     print(Data_To_Write)
     Main.ser.close()
     return Data_To_Write
+
+def ToDoAction(Action, path):
+    time.sleep(1)
+    Action = "To Do"
+    Expected_Data = "---"
+    Result = messagepopup.ActionToDo(Action)
+    Data = "---"
+    Comments = "---"
+    
