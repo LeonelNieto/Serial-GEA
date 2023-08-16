@@ -92,11 +92,52 @@ def Write(dst:str, ERD:str, Write_Dato:str, Path="", board=1) -> list[str]:
     Main.ser.close()
     return Data_To_Write
 
-def ToDoAction(Action, path):
-    time.sleep(1)
-    Action = "To Do"
-    Expected_Data = "---"
-    Result = messagepopup.ActionToDo(Action)
+def ActionPassOrFail(ToDo, Path=""):
+    Time = datetime.now().strftime("%H:%M:%S")
+    Dia = datetime.now().strftime("%d-%m-%Y")
+    ACTION = "To Do"
+    Expected_Data = ToDo
+    ERD = "---"
+    Result = messagepopup.ActionToDo(ToDo)
     Data = "---"
     Comments = "---"
-    
+    Write_Dato = "---"
+    Data_To_Write = [Dia, Time, ACTION, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    print(Data_To_Write)
+    return Data_To_Write
+
+def ToDoTimedAction(WaitSeconds:int, TextAction:str, Path=""):
+    Time = datetime.now().strftime("%H:%M:%S")
+    Dia = datetime.now().strftime("%d-%m-%Y")
+    ACTION = TextAction
+    Expected_Data = "---"
+    ERD = "---"
+    Result = "DONE"
+    Data = "---"
+    Comments = "---"
+    Write_Dato = "---"
+    messagepopup.TimedAction(WaitSeconds, TextAction)
+    Data_To_Write = [Dia, Time, ACTION, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    print(Data_To_Write)
+    return Data_To_Write
+
+def ActionDone(Action:str, Path=""):
+    Time = datetime.now().strftime("%H:%M:%S")
+    Dia = datetime.now().strftime("%d-%m-%Y")
+    ACTION = Action
+    Expected_Data = "---"
+    ERD = "---"
+    Result = "DONE"
+    Data = "---"
+    Comments = "---"
+    Write_Dato = "---"
+    messagepopup.ImmediateAction(Action)
+    Data_To_Write = [Dia, Time, ACTION, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
+    if len(Path) != 0:
+        FileCsv.Write_Data_CSV(Path, Data_To_Write)
+    print(Data_To_Write)
+    return Data_To_Write
