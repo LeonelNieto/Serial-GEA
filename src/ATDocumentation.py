@@ -24,7 +24,7 @@ def AutoDocumentation(texto:str) -> None:
 
     lineas = texto_modificado.split('\n')
     for i in range(len(lineas)):
-        if lineas[i].startswith('Read'):
+        if lineas[i].startswith('Read') or lineas[i].startswith('Verify'):
             lineas[i] += ' **-->PASS**'
         else:
             lineas[i] += ' **-->DONE**'
