@@ -1,4 +1,4 @@
-# GEA2 Python
+# PYTHON-GEA-TOOL
 
 Este proyecto está basado en la adquisión de datos por medio de python y la visualización y control mediante LabVIEW.
 
