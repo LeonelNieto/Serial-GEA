@@ -108,7 +108,7 @@ def ActionPassOrFail(ToDo, Path=""):
     print(Data_To_Write)
     return Data_To_Write
 
-def ToDoTimedAction(WaitSeconds:int, TextAction:str, Path=""):
+def ToDoTimedAction(WaitSeconds:int, TextAction:str, Path="", LessTime=0):
     Time = datetime.now().strftime("%H:%M:%S")
     Dia = datetime.now().strftime("%d-%m-%Y")
     ACTION = TextAction
@@ -118,7 +118,7 @@ def ToDoTimedAction(WaitSeconds:int, TextAction:str, Path=""):
     Data = "---"
     Comments = "---"
     Write_Dato = "---"
-    messagepopup.TimedAction(WaitSeconds, TextAction)
+    messagepopup.TimedAction(WaitSeconds, TextAction, LessTime)
     Data_To_Write = [Dia, Time, ACTION, ERD, Expected_Data, Data, Write_Dato, Result, Comments]
     if len(Path) != 0:
         FileCsv.Write_Data_CSV(Path, Data_To_Write)

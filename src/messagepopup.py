@@ -37,7 +37,7 @@ def ActionToDo(Action:str) -> str:
     window.mainloop()
     return result
 
-def TimedAction(total_seconds:int, ActionText:str):
+def TimedAction(total_seconds:int, ActionText:str, LessTime=0):
     root = ctk.CTk()
     root.title("Temporizador")
     ctk.set_appearance_mode("dark")
@@ -56,7 +56,7 @@ def TimedAction(total_seconds:int, ActionText:str):
     label = ctk.CTkLabel(root, textvariable=seconds, font=("Helvetica", 24), text_color="white")
     label.pack(pady=20)
 
-    for remainingtime in range(total_seconds, -1, -1):
+    for remainingtime in range((total_seconds - LessTime), -1, -1):
         seconds.set(ActionText + "\nTime remaining: " + str(remainingtime))
         root.update()
         time.sleep(1)
