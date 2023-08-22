@@ -31,3 +31,53 @@ def AutoDocumentation(texto:str) -> None:
 
     texto_modificado = '\n'.join(lineas)
     print(texto_modificado)
+
+texto = texto = """Test 1: New ERD Erd_MabeCommunicationRequest1Levels.
+Write (0x001100) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature and spin level leds shall turn on at level 1.
+Write (0x002200) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature and spin level leds shall turn on at level 2.
+Write (0x003300) to Erd_MabeCommunicationRequest1Level.
+Verify that temperature and spin level leds shall turn on at level 3.
+Write (0x004400) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature and spin level leds shall turn on at level 4.
+Write (0x005500) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature and spin level leds shall turn on at level 5.
+Write (0x000000) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature and spin level leds shall turn off.
+Write (0x000100) to Erd_MabeCommunicationRequest1Levels.
+Verify that spin level led shall turn on at level 1.
+Write (0x001000) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature level led shall turn on at level 1.
+Write (0x000300) to Erd_MabeCommunicationRequest1Levels.
+Verify that spin level led shall turn on at level 3.
+Write (0x003000) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature level led shall turn on at level 3.
+Write (0x000500) to Erd_MabeCommunicationRequest1Levels.
+Verify that spin level led shall turn on at level 5.
+Write (0x005000) to Erd_MabeCommunicationRequest1Levels.
+Verify that temperature level led shall turn on at level 5.
+
+Test 2: Two points icon.
+Write (0x00) to Erd_MabeCommunicationConfiguration.
+Write (0x100000) to Erd_MabeCommunicationRequest2Icons.
+Verify that nothings happend.
+Write (0x01) to Erd_MabeCommunicationConfiguration.
+Write (0x100000) to Erd_MabeCommunicationRequest2Icons.
+Verify two point icon shall turn on.
+Write (0x000000) to Erd_MabeCommunicationRequest2Icons.
+Verify two point icon shall turn off.
+
+Test 3: Write an specific hour in the display with two points icon.
+Write (0x00) to Erd_MabeCommunicationConfiguration.
+Write (0x3034323000000000) to Erd_MabeCommunicationRequest2Units.
+Write (0x100000) to Erd_MabeCommunicationRequest2Icons.
+Verify that nothing happend.
+Write (0x01) to Erd_MabeCommunicationConfiguration.
+Write (0x3034323000000000) to Erd_MabeCommunicationRequest2Units.
+Write (0x100000) to Erd_MabeCommunicationRequest2Icons.
+Verify display shall turn on "04:20".
+Write (0x3138303900000000) to Erd_MabeCommunicationRequest2Units.
+Verify display shall turn on "18:09"."""
+
+AutoDocumentation(texto)
