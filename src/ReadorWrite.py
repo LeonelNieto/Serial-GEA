@@ -17,21 +17,23 @@ def BuildFrameToReadErd(ERD:str, dst:str) -> bytes:
     return:
         bytes: Trama de datos completa a enviar por serial
     """
-    BIT_INIT = "E2"                                                                                      # Bit de Inicio
-    BIT_STOP = "E3"                                                                                      # Bit de Stop
-    SRC = "E4"                                                                                          # Source
-    CMD = "F001"                                                                                        # Comando de  request para lectura
-    longitud = int(((len(BIT_INIT + dst + SRC + CMD + ERD + BIT_STOP)) + 6) / 2)                          # Cálculo de la longitud de la trama
-    lenght = "{:02x}".format(longitud)                                                                  # Conversión a hexadecimal de dos digitos
-    FrameToCalculateCrc = dst + lenght + SRC + CMD + ERD                                                # Concatena trama para calculo de CRC
-    crc = Crc16ccitt.crc16_ccitt(FrameToCalculateCrc)                                                          # Calcula el CRC                                                                                   # Elimina "0x" del CRC
+    BIT_INIT = "E2"
+    BIT_STOP = "E3"
+    SRC = "E4"
+    CMD = "F001"
+    longitud = int(((len(BIT_INIT + dst + SRC + CMD + ERD + BIT_STOP)) + 6) / 2)
+    lenght = "{:02x}".format(longitud)
+    FrameToCalculateCrc = dst + lenght + SRC + CMD + ERD
+    crc = Crc16ccitt.crc16_ccitt(FrameToCalculateCrc)
     frame = BIT_INIT + FrameToCalculateCrc + crc + BIT_STOP 
-    if ERD == "20BE":
-        frame = BIT_INIT + FrameToCalculateCrc + crc + "E0" + BIT_STOP                                               # Concatena la trama de datos completa en hexadecimal
-    data = bytes.fromhex(frame)                                                                         # Convierte los datos a bytes
-    return data                                                                                         # Retorna la trama a escribir en el serial
+    if ERD in ["20BE", "2F0A"]:
+        frame = (BIT_INIT + FrameToCalculateCrc + crc + "E0" + BIT_STOP).upper()
+    print("Fame a escribir: " + frame)
+    data = bytes.fromhex(frame)                                                                    
+    return data
 
-
+print(BuildFrameToReadErd("2F0A", "23"))
+    
 def BuildFrameToWriteErd(ERD:str, dato:str, dst:str) -> bytes:
     """
     Función que construye la trama de datos a enviar
@@ -56,7 +58,7 @@ def BuildFrameToWriteErd(ERD:str, dato:str, dst:str) -> bytes:
     lenght = "{:02x}".format(longitud)                                                               
     FrameToCalculateCrc = dst + lenght + SRC + CMD + ERD + Erd_data_size + dato                   
     crc = Crc16ccitt.crc16_ccitt(FrameToCalculateCrc)                                                                                                                            
-    if ERD not in ["0032", "F097"]:                                                                             
+    if ERD not in ["0032", "F097", "2F0A"]:                                                                             
         frame = BIT_INIT + FrameToCalculateCrc + crc + BIT_STOP                                   
     else:                                                                                        
         frame = BIT_INIT + FrameToCalculateCrc + BIT_ESC + crc + BIT_STOP                                   
